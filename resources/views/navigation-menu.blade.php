@@ -215,9 +215,3 @@
         </div>
     </div>
 </nav>
-git init
-  303  git add README.md
-  304  git commit -m "start"
-  305  git branch -M main
-  306  git remote add origin https://github.com/NikitaIZ/fangor.git
-  307  git push -u origin main
