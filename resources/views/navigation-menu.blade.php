@@ -20,7 +20,7 @@
                        CCTV
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('tanks') }}" :active="request()->routeIs('tanks')">
+                    <x-jet-nav-link href="{{ route('tanks.index') }}" :active="request()->routeIs('tanks')">
                         Tanques
                     </x-jet-nav-link>
                 </div>
@@ -154,7 +154,7 @@
                 CCTV
             </x-jet-responsive-nav-link>
 
-            <x-jet-responsive-nav-link href="" :active="request()->routeIs('tanks')">
+            <x-jet-responsive-nav-link href="{{ route('tanks.index') }}" :active="request()->routeIs('tanks')">
                 Tanques
             </x-jet-responsive-nav-link>
         </div>
