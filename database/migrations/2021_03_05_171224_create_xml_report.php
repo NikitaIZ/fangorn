@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTanksReportsTable extends Migration
+class CreateXmlReport extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateTanksReportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tanks_reports', function (Blueprint $table) {
+        Schema::create('xml_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->index();
-            $table->foreignId('tank_id')->index();
-            $table->integer('liters');
-            $table->longText('description')->nullable();
+            $table->string('date');
+            $table->string('document');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateTanksReportsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tanks_reports');
+        Schema::dropIfExists('xml_reports');
     }
 }

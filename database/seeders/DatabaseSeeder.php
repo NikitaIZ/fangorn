@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\TankReport;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         //$this->call(TankSeeder::class);
-        $this->call(TankReportSeeder::class);
+        //$this->call(TankReportSeeder::class);
+        //$this->call(XmlHeadingSeeder::class);
     }
 }

@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\XMLController;
 use App\Http\Controllers\TankController;
 
 use App\Mail\ContactUsMailable;
@@ -24,6 +27,8 @@ Route::get('contac-us', function () {
     Mail::to('michelle6yalaupari@gmail.com')->send($correo);
 });
 
+
+//Rutas de los Tanques
 Route::middleware(['auth:sanctum', 'verified'])->get('tanks', 
     [TankController::class, 'index'])->name('tanks.index');
 
@@ -42,9 +47,10 @@ Route::middleware(['auth:sanctum', 'verified'])->post('reports/create',
 Route::middleware(['auth:sanctum', 'verified'])->get('tanks/{tank}', 
     [TankController::class, 'show'])->name('tanks.show');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+//Rutas de inicio
+
+Route::middleware(['auth:sanctum', 'verified'])->get('dashboard', 
+    [HomeController::class, 'index'])->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('register', function () {
     return view('auth.register');
@@ -54,6 +60,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('CCTV', function () {
     return view('welcome');
 })->name('cctv');
 
+//Ruta xml
 
+Route::middleware(['auth:sanctum', 'verified'])->get('xmls', 
+    [XMLController::class, 'index'])->name('index.xml');
 
 

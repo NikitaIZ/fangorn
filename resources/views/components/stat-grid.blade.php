@@ -1,12 +1,12 @@
 <!-- Smile, breathe, and go slowly. - Thich Nhat Hanh -->
     <div class="max-w-7xl w-full mx-auto py-6 sm:px-6 lg:px-8">
         <div class="flex flex-col lg:flex-row w-full lg:space-x-2 space-y-2 lg:space-y-0 mb-2 lg:mb-4">
-            <div class="w-full lg:w-1/4">
-                <div class="widget w-full p-4 rounded-lg bg-white border-l-4 border-purple-400">
+            <div class="w-full lg:w-1/3">
+                <div class="widget w-full p-4 rounded-lg bg-white border-l-4 border-blue-400">
                     <div class="flex items-center">
-                        <div class="icon w-14 p-3.5 bg-purple-400 text-white rounded-full mr-3">
-                            <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="chart-bar" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-chart-bar fa-w-16 fa-3x">
-                                <path fill="currentColor" d="M396.8 352h22.4c6.4 0 12.8-6.4 12.8-12.8V108.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v230.4c0 6.4 6.4 12.8 12.8 12.8zm-192 0h22.4c6.4 0 12.8-6.4 12.8-12.8V140.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v198.4c0 6.4 6.4 12.8 12.8 12.8zm96 0h22.4c6.4 0 12.8-6.4 12.8-12.8V204.8c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v134.4c0 6.4 6.4 12.8 12.8 12.8zM496 400H48V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-16c0-8.84-7.16-16-16-16zm-387.2-48h22.4c6.4 0 12.8-6.4 12.8-12.8v-70.4c0-6.4-6.4-12.8-12.8-12.8h-22.4c-6.4 0-12.8 6.4-12.8 12.8v70.4c0 6.4 6.4 12.8 12.8 12.8z" class=""></path>
+                        <div class="icon w-14 p-3 bg-blue-400 text-white rounded-full mr-3">
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tint" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-tint fa-w-11 fa-2x" style="padding-left: 4.5px;">
+                                <path fill="currentColor" d="M205.22 22.09c-7.94-28.78-49.44-30.12-58.44 0C100.01 179.85 0 222.72 0 333.91 0 432.35 78.72 512 176 512s176-79.65 176-178.09c0-111.75-99.79-153.34-146.78-311.82zM176 448c-61.75 0-112-50.25-112-112 0-8.84 7.16-16 16-16s16 7.16 16 16c0 44.11 35.89 80 80 80 8.84 0 16 7.16 16 16s-7.16 16-16 16z" class=""></path>
                             </svg>
                         </div>
                         <div class="flex flex-col justify-center">
@@ -17,23 +17,7 @@
                 </div>
             </div>
 
-            <div class="w-full lg:w-1/4">
-                <div class="widget w-full p-4 rounded-lg bg-white border-l-4 border-blue-400">
-                    <div class="flex items-center">
-                        <div class="icon w-14 p-3 bg-blue-400 text-white rounded-full mr-3">
-                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tint" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-tint fa-w-11 fa-2x" style="padding-left: 4.5px;">
-                                <path fill="currentColor" d="M205.22 22.09c-7.94-28.78-49.44-30.12-58.44 0C100.01 179.85 0 222.72 0 333.91 0 432.35 78.72 512 176 512s176-79.65 176-178.09c0-111.75-99.79-153.34-146.78-311.82zM176 448c-61.75 0-112-50.25-112-112 0-8.84 7.16-16 16-16s16 7.16 16 16c0 44.11 35.89 80 80 80 8.84 0 16 7.16 16 16s-7.16 16-16 16z" class=""></path>
-                            </svg>
-                        </div>
-                        <div class="flex flex-col justify-center">
-                            <div class="text-lg">{{ $nominal }}</div>
-                            <div class="text-sm text-gray-400">Nominal</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="w-full lg:w-1/4">
+            <div class="w-full lg:w-1/3">
                 <div class="widget w-full p-4 rounded-lg bg-white border-l-4 border-red-400">
                     <div class="flex items-center">
                         <div class="icon w-14 p-3.5 bg-red-400 text-white rounded-full mr-3">
@@ -49,7 +33,7 @@
                 </div>
             </div>
 
-            <div class="w-full lg:w-1/4">
+            <div class="w-full lg:w-1/3">
                 <div class="widget w-full p-4 rounded-lg bg-white border-l-4 border-green-400">
                     <div class="flex items-center">
                         <div class="icon w-14 p-3.5 bg-green-400 text-white rounded-full mr-3">
