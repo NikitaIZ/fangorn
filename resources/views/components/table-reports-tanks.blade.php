@@ -13,7 +13,7 @@
                                 </svg>
                             </span>
                         </div>
-                        <input type="text" class="flex-shrink flex-grow flex-auto leading-normal tracking-wide w-px border border-none border-l-0 rounded rounded-l-none px-3 relative focus:outline-none text-xxs lg:text-xs lg:text-base text-gray-500 font-thin" placeholder="Search">
+                        <input type="text" class="flex-shrink flex-grow flex-auto leading-normal tracking-wide w-px border border-none border-l-0 rounded rounded-l-none px-3 relative focus:outline-none text-xxs lg:text-base text-gray-500 font-thin" placeholder="Search">
                     </div>
                 </div>
             </div>
@@ -21,14 +21,14 @@
         <div class="my-2 pt-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-4/12">
             <div class="float-left">
                 <div class="flex justify-between">
-                    <div class="inline-flex w-full ">
+                    <div class="inline-flex w-full">
                         {{ $boton1 }}
                     </div>
                 </div>
             </div>
             <div class="float-right">
                 <div class="flex justify-between">
-                    <div class="inline-flex w-full ">
+                    <div class="inline-flex w-full">
                         {{ $boton2 }}
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                 {{ $thead }}
             </thead>
             <tbody class="bg-white">
-               {{ $tbody }}
+                {{ $tbody }}
             </tbody>
         </table>
         <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">

@@ -6,32 +6,53 @@ use Illuminate\Http\Request;
 use App\Models\Xml\XmlHeading;
 use App\Models\Xml\XmlData;
 use App\Models\Xml\XmlReport;
+use App\Models\Views\ViewXmlReport;
 
-
-class XMLController extends Controller
+class XmlController extends Controller
 {
-    private function date($url){
-        $link = str_replace('xml/', '', $url);
-        $groups = explode('/', $link);
-        $date = $groups[count($groups) - 2];
+    private function conexion(){
+        $comand = CONEXION;
+        System ($comand);
+    }
+
+    private function orderDate($name){
+        $chara = str_split($name);
+        $date = $chara[0] . $chara[1] . "/" . 
+                $chara[2] . $chara[3] . "/" . 
+                $chara[4] . $chara[5] ;
         return $date;
+    } 
+
+    private function dirScan($disk, $option) {
+        $ignored = array('.', '..', 'Thumbs.db', '111014', '010715', '310715', '010815', '010915');
+        $directories = array();    
+        foreach (scandir($disk) as $directory) {
+            if (in_array($directory, $ignored)) continue;
+            if (ViewXmlReport::check('Fecha', $this->orderDate($directory)) == false){
+                $directories[$directory] = filectime($disk . '/' . $directory);
+            }
+        }
+        if ($option == "first"){
+            asort($directories);
+        }elseif($option == "last"){
+            arsort($directories);
+        }
+        $directories = array_keys($directories);
+        return ($directories) ? $directories : false;
     }
 
     private function heading($name){
         $table = XmlHeading::select('*')->where('name', $name)->get();
-
         foreach ($table as $dato){
             return $dato->id;
         }
-        
     }
 
-    private function upXml($id, $date, $array){
-       /* $XmlReport = new XmlReport();
-        $XmlReport->date     = $date;
-        $XmlReport->document = $id;
+    private function updateXmlReport($date, $array){
+        $XmlReport = new XmlReport();
+        $XmlReport->date = $date;
         $XmlReport->save();
-       foreach ($array as $key => $dato){
+        foreach ($array as $key => $dato){
             $XmlData = new XmlData();
             $XmlData->report_id  = $XmlReport->id;
             $XmlData->heading_id = $this->heading($key);
@@ -39,24 +60,22 @@ class XMLController extends Controller
             $XmlData->month      = $dato['MONTH'];
             $XmlData->year       = $dato['YEAR'];
             $XmlData->save();
-        }*/
+        }
     }
 
-    public function index(){
+    private function orderXml($urlManager, $urlBuc, $name, $i=0, $all_data = array()){
 
-        $all_data = array();
+        $date = $this->orderDate($name);
 
-        $url = "xml/020321/manager.xml";
-        $xml = simplexml_load_file($url);
-        $json = json_encode($xml);
-        $array = json_decode($json,TRUE);
+        $xml   = simplexml_load_file($urlManager);
+        $json  = json_encode($xml);
+        $array = json_decode($json, TRUE);
 
-        $id   = $array['LIST_G_MASTER_VALUE_ORDER']['G_MASTER_VALUE_ORDER']['RESORT'];
         $data = $array['LIST_G_MASTER_VALUE_ORDER']['G_MASTER_VALUE_ORDER']['LIST_G_LAST_YEAR_01']['G_LAST_YEAR_01']['LIST_G_CROSS']['G_CROSS']['LIST_G_MASTER_VALUE']['G_MASTER_VALUE'];
                 
         foreach ($data as $value) {
-            $title= $value['SUB_GRP_1'];
-            $time = $value['LIST_G_HEADING_1_ORDER']['G_HEADING_1_ORDER'];
+            $title = $value['SUB_GRP_1'];
+            $time  = $value['LIST_G_HEADING_1_ORDER']['G_HEADING_1_ORDER'];
 
             foreach ($time as $value) {
                 if ($value['LIST_G_SUM_AMOUNT']['G_SUM_AMOUNT']['SUM_AMOUNT'] != null){
@@ -68,8 +87,94 @@ class XMLController extends Controller
             }
         }
 
-        $date = $this->date($url);
+        $xml   = simplexml_load_file($urlBuc);
+        $json  = json_encode($xml);
+        $array = json_decode($json, TRUE);
 
-        $this->upXml($id, $date, $all_data);
+        foreach ($array['LIST_G_ROOM']['G_ROOM'] as $value){
+            if (
+                $value['MARKET_CODE'] == 'CNT'
+            ){
+                $i++;
+            }
+        }
+
+        $all_data['OCC_ROOMS_TIME_SHARE']['DAY']   = $i;
+        $all_data['OCC_MINUS_COMP_HU_TS']['DAY']   = $all_data['OCC_MINUS_COMP_HU']['DAY'] - $all_data['OCC_ROOMS_TIME_SHARE']['DAY'];
+        $all_data['OCC_PERC_TS']['DAY']            = $all_data['OCC_ROOMS_TIME_SHARE']['DAY'] / ($all_data['PHYSICAL_ROOMS']['DAY'] * 100);
+        $all_data['OCC_PERC_WO_CHTS']['DAY']       = $all_data['OCC_MINUS_COMP_HU_TS']['DAY'] / ($all_data['PHYSICAL_ROOMS']['DAY'] * 100);
+        if ($all_data['OCC_MINUS_COMP_HU_TS']['DAY'] != 0){
+            $all_data['ADR_ROOM_WO_CHTS']['DAY']   = $all_data['ROOM_REVENUE']['DAY'] / $all_data['OCC_MINUS_COMP_HU_TS']['DAY'];
+        }else{
+            $all_data['ADR_ROOM_WO_CHTS']['DAY']   = 0;
+        }
+        $all_data['REV_PAR']['DAY']                = $all_data['ADR_ROOM_WO_CHTS']['DAY'] * $all_data['OCC_PERC_WO_O']['DAY'] / 100;
+
+        $all_data['OCC_ROOMS_TIME_SHARE']['MONTH'] = "";
+        $all_data['OCC_MINUS_COMP_HU_TS']['MONTH'] = "";
+        $all_data['OCC_PERC_TS']['MONTH']          = "";
+        $all_data['OCC_PERC_WO_CHTS']['MONTH']     = "";
+        $all_data['ADR_ROOM_WO_CHTS']['MONTH']     = "";
+        $all_data['REV_PAR']['MONTH']              = "";
+
+        $all_data['OCC_ROOMS_TIME_SHARE']['YEAR']  = "";
+        $all_data['OCC_MINUS_COMP_HU_TS']['YEAR']  = "";
+        $all_data['OCC_PERC_TS']['YEAR']           = "";
+        $all_data['OCC_PERC_WO_CHTS']['YEAR']      = "";
+        $all_data['ADR_ROOM_WO_CHTS']['YEAR']      = "";
+        $all_data['REV_PAR']['YEAR']               = "";
+
+        $this->updateXmlReport($date, $all_data);
+    }
+
+    private function mountXml(){
+        $this->conexion();
+        if (
+            scandir("Z:\\") == true
+        ) {
+            $directories = $this->dirScan('Z:\\', 'last');
+            if ($directories != false){
+                foreach ($directories as $directory) {
+                    $fileBuc = "Z:\\" . $directory . "\buc_chk_exc.xml";
+                    $fileManager = "Z:\\" . $directory . "\manager.xml";
+                    if (
+                        file_exists($fileBuc) AND file_exists($fileManager) == true
+                    ) {
+                        $this->orderXml($fileManager, $fileBuc, $directory);
+                    }
+                }
+            }
+            return true;
+        } {
+            return false;
+        }
+    }
+
+    public function index(){
+        $reports = XmlReport::orderby('id', 'desc')->paginate(10);
+        return view('xmls.index', compact('reports')); 
+    }
+
+    public function createXml(){
+        if ($this->mountXml() == true){
+            return redirect()->route('dashboard');
+        }
+    }
+
+    public function updateXml(){
+        
+    }
+
+    public function createReport(){
+        
+    }
+
+    public function updateReport(){
+        
+    }
+
+    public function show($xml){
+        $data = ViewXmlReport::select('*')->where('ID', $xml)->get();
+        return view('xmls.show', compact('xml', 'data'));
     }
 }

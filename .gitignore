@@ -2,6 +2,7 @@
 /public/hot
 /public/xml
 /public/storage
+/public/conexion.bat
 /storage/*.key
 /vendor
 .env
@@ -12,3 +13,4 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+conexion.bat

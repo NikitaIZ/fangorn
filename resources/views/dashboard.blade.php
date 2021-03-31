@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
@@ -35,7 +35,7 @@
                                         </svg>
                                     </div>
                                     <div class="flex flex-col justify-center">
-                                        <div class="text-lg">{{ $dolar->dolartoday }}</div>
+                                        <div class="text-lg">{{ number_format($dolar->dolartoday, 2) }}</div>
                                         <div class="text-sm text-gray-400">Tasa del Día</div>
                                     </div>
                                 </div>
@@ -47,28 +47,110 @@
         </div>
     </div>
 
-    <div class="py-12">
+    <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex flex-wrap mx-1 lg:-mx-4">
                 <div class="my-2 px-1 w-full md:w-1/2 lg:my-4 lg:px-6 lg:w-1/2">
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        {{ $data[0]->Descripción }} : {{ $data[0]->Dia }}
-                        <br>
-                        Pax:
-                        <br>
-                        Porcentaje:
+                        <table class="text-left w-full border-collapse"> <!--Border collapse doesn't work on this site yet but it's available in newer tailwind versions -->
+                            <thead>
+                                <tr>
+                                  <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Reporte del Día</th>
+                                  <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
+                                    <div class="text-right">
+                                        <a href="{{ route('xml.index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                            Ver Todos
+                                        </a>
+                                    </div>
+                                  </th>
+                                </tr>
+                              </thead>
+                            <tbody>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">{{ $data[1]->Descripción }} (Hab) :</td>
+                                <td class="py-4 px-6 border-b border-grey-light">{{ number_format($data[1]->Dia, 0) }}</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">{{ $data[15]->Descripción }} (Pax) :</td>
+                                <td class="py-4 px-6 border-b border-grey-light">{{ number_format($data[15]->Dia, 0) }}</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">{{ $data[35]->Descripción }} :</td>
+                                <td class="py-4 px-6 border-b border-grey-light">{{ number_format($data[35]->Dia, 2) }}%</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">{{ $data[121]->Descripción }} :</td>
+                                <td class="py-4 px-6 border-b border-grey-light">{{ number_format($data[121]->Dia, 2) }}</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">{{ $data[122]->Descripción }} (REV) :</td>
+                                <td class="py-4 px-6 border-b border-grey-light">{{ number_format($data[122]->Dia, 3) }}</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">{{ $data[94]->Descripción }} (DEP) :</td>
+                                <td class="py-4 px-6 border-b border-grey-light">{{ number_format($data[94]->Dia, 0) }}</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">{{ $data[92]->Descripción }} (ARR) :</td>
+                                <td class="py-4 px-6 border-b border-grey-light">{{ number_format($data[92]->Dia, 0) }}</td>
+                              </tr>
+                            </tbody>
+                        </table>
+                        <div class="my-2 py-1 px-1 w-full lg:my-4 lg:px-4 text-center">
+                            <a href="{{ route('reports.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Actualizar Reporte
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="my-2 px-1 w-full md:w-1/2 lg:my-4 lg:px-6 lg:w-1/2">
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        Buffet
-                        <table>
+                        <table class="text-left w-full border-collapse"> <!--Border collapse doesn't work on this site yet but it's available in newer tailwind versions -->
                             <thead>
-                                <td></td>
+                              <tr>
+                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Buffet</th>
+                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Adults </th>
+                                <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Children</th>
+                              </tr>
                             </thead>
                             <tbody>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">Desayunos</td>
+                                <td class="py-4 px-6 border-b border-grey-light">15$</td>
+                                <td class="py-4 px-6 border-b border-grey-light">10$</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">Almuerzos</td>
+                                <td class="py-4 px-6 border-b border-grey-light">20$</td>
+                                <td class="py-4 px-6 border-b border-grey-light">10$</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">Cenas</td>
+                                <td class="py-4 px-6 border-b border-grey-light">20$</td>
+                                <td class="py-4 px-6 border-b border-grey-light">10$</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">Brunch</td>
+                                <td class="py-4 px-6 border-b border-grey-light">30$</td>
+                                <td class="py-4 px-6 border-b border-grey-light">15$</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">Pool Day</td>
+                                <td class="py-4 px-6 border-b border-grey-light">25$</td>
+                                <td class="py-4 px-6 border-b border-grey-light">10$</td>
+                              </tr>
+                              <tr class="hover:bg-grey-lighter">
+                                <td class="py-4 px-6 border-b border-grey-light">Pax Adicional</td>
+                                <td class="py-4 px-6 border-b border-grey-light">50$</td>
+                                <td class="py-4 px-6 border-b border-grey-light">50$</td>
+                              </tr>
                             </tbody>
                         </table>
+                        <div class="my-2 py-1 px-1 w-full lg:my-4 lg:px-4 text-center">
+                            <a href="{{ route('reports.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Actualizar Buffet
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

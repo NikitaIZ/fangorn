@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\XMLController;
+use App\Http\Controllers\XmlController;
 use App\Http\Controllers\TankController;
 
 use App\Mail\ContactUsMailable;
@@ -38,11 +38,11 @@ Route::middleware(['auth:sanctum', 'verified'])->get('tanks/create',
 Route::middleware(['auth:sanctum', 'verified'])->post('tanks/create', 
     [TankController::class, 'updateTank'])->name('tanks.update');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('reports/create', 
-    [TankController::class, 'createReport'])->name('reports.create');
+Route::middleware(['auth:sanctum', 'verified'])->get('tanks/reports/create', 
+    [TankController::class, 'createReport'])->name('tanks.reports.create');
 
-Route::middleware(['auth:sanctum', 'verified'])->post('reports/create', 
-    [TankController::class, 'updateReport'])->name('reports.update');
+Route::middleware(['auth:sanctum', 'verified'])->post('tanks/reports/create', 
+    [TankController::class, 'updateReport'])->name('tanks.reports.update');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('tanks/{tank}', 
     [TankController::class, 'show'])->name('tanks.show');
@@ -51,6 +51,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('tanks/{tank}',
 
 Route::middleware(['auth:sanctum', 'verified'])->get('dashboard', 
     [HomeController::class, 'index'])->name('dashboard');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('test', 
+    [HomeController::class, 'test'])->name('test');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('register', function () {
     return view('auth.register');
@@ -63,6 +66,22 @@ Route::middleware(['auth:sanctum', 'verified'])->get('CCTV', function () {
 //Ruta xml
 
 Route::middleware(['auth:sanctum', 'verified'])->get('xmls', 
-    [XMLController::class, 'index'])->name('index.xml');
+    [XmlController::class, 'index'])->name('xml.index');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('xmls/create', 
+    [XmlController::class, 'createXml'])->name('xml.create');
+
+Route::middleware(['auth:sanctum', 'verified'])->post('xmls/create', 
+    [XmlController::class, 'updateXml'])->name('xml.update');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('xmls/reports/create', 
+    [XmlController::class, 'createReport'])->name('reports.create');
+
+Route::middleware(['auth:sanctum', 'verified'])->post('xmls/reports/create', 
+    [XmlController::class, 'updateReport'])->name('reports.update');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('xmls/{xml}', 
+    [XmlController::class, 'show'])->name('xmls.show');
+
 
 

@@ -16,7 +16,6 @@ class CreateXmlReport extends Migration
         Schema::create('xml_reports', function (Blueprint $table) {
             $table->id();
             $table->string('date');
-            $table->string('document');
             $table->timestamps();
         });
     }

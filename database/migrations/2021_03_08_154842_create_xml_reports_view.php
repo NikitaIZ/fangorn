@@ -18,7 +18,6 @@ class CreateXmlReportsView extends Migration
         $xml_reports = DB::table('xml_data')
         ->select('xml_reports.id as ID',
                  'xml_reports.date as Fecha',
-                 'xml_reports.document as Documento',
                  'xml_headings.description as Descripción',
                  'xml_data.day as Dia',
                  'xml_data.month as Mes',
@@ -28,7 +27,7 @@ class CreateXmlReportsView extends Migration
         ->leftJoin('xml_reports', 'xml_reports.id', '=', 'xml_data.report_id')
         ->leftJoin('xml_headings', 'xml_headings.id', '=', 'xml_data.heading_id');
 
-        Schema::createView('xmls_reports_view', $xml_reports);
+        Schema::createView('xml_reports_view', $xml_reports);
     }
 
     /**
@@ -38,6 +37,6 @@ class CreateXmlReportsView extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('xmls_reports_view');
+        Schema::dropIfExists('xml_reports_view');
     }
 }
