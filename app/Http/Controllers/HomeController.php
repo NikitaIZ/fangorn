@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Buffet;
 use App\Models\Views\ViewXmlReport;
 use App\Models\Xml\XmlReport;
-
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -22,19 +21,13 @@ class HomeController extends Controller
     }
 
     function index(){
-        $date_past = strtotime('-1 day', strtotime(date('d-m-Y')));
-        $date_past = date('d/m/y', $date_past);
-        $data      = ViewXmlReport::data('Fecha', $date_past);
-        if (empty($data[0]) == true){
-            return redirect()->route('reports.create');
-        }else{
-            $date      = date('d/m/y');
-            $dolar     = $this->dolarToday();
-            return view('dashboard', compact('data', 'dolar', 'date'));
-        }
-    }
-
-    function test(){
-
+        /*$date_past = strtotime('-1 day', strtotime(date('d-m-Y')));
+        $date_past = date('d/m/y', $date_past);*/
+        $date   = date('d/m/y');
+        $dolar  = $this->dolarToday();
+        $buffet = Buffet::select('*')->get();
+        $id     = XmlReport::all()->last()->id;
+        $xml    = ViewXmlReport::select('*')->where('ID', $id)->get();
+        return view('dashboard', compact('xml', 'dolar', 'date', 'buffet'));
     }
 }

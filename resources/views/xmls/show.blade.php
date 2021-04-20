@@ -4,26 +4,25 @@
             {{ __('Reporte '. $data[0]->Documento . ' Fecha '. $data[0]->Fecha) }}
         </h2>
     </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <table class="min-w-full table-auto">
                     <thead class="justify-between">
-                      <tr class="bg-gray-800">
-                        <th class="px-16 py-2">
-                          <span class="text-gray-300">Descripción</span>
-                        </th>
-                        <th class="px-16 py-2">
-                          <span class="text-gray-300">Día</span>
-                        </th>
-                        <th class="px-16 py-2">
-                          <span class="text-gray-300">Mes</span>
-                        </th>
-                        <th class="px-16 py-2">
-                          <span class="text-gray-300">Año</span>
-                        </th>
-                      </tr>
+                        <tr class="bg-gray-800">
+                            <th class="px-16 py-2">
+                            <span class="text-gray-300">Descripción</span>
+                            </th>
+                            <th class="px-16 py-2">
+                            <span class="text-gray-300">Día</span>
+                            </th>
+                            <th class="px-16 py-2">
+                            <span class="text-gray-300">Mes</span>
+                            </th>
+                            <th class="px-16 py-2">
+                            <span class="text-gray-300">Año</span>
+                            </th>
+                        </tr>
                     </thead>
                     <tbody class="bg-gray-200">
                         @foreach ($data as $dato)
@@ -35,21 +34,21 @@
                                     @if ($dato->Dia == "")
                                         <span>{{ $dato->Dia }}</span>           
                                     @else
-                                        <span>{{ number_format($dato->Dia, 2) }}</span>
+                                        <span>{{ round($dato->Dia, 2) }}</span>
                                     @endif
                                 </td>
                                 <td class="px-16 py-2 text-center">
                                     @if ($dato->Mes == "")
                                         <span>{{ $dato->Mes }}</span>           
                                     @else
-                                        <span>{{ number_format($dato->Mes, 2) }}</span>
+                                        <span>{{ round($dato->Mes, 2) }}</span>
                                     @endif
                                 </td>
                                 <td class="px-16 py-2 text-center">
                                     @if ($dato->Año == "")
                                         <span>{{ $dato->Año }}</span>           
                                     @else
-                                        <span>{{ number_format($dato->Año, 2) }}</span>
+                                        <span>{{ round($dato->Año, 2) }}</span>
                                     @endif
                                 </td>
                             </tr>

@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\ConnectionTask::class,
+        Commands\DisconnectionTask::class,
+        Commands\XmlTask::class,
     ];
 
     /**
@@ -24,7 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->exec("cmd /c E:\\fangorn\connection.bat")->dailyAt('10:30');
+        $schedule->command('xml:task')->dailyAt('11:00');
+        $schedule->exec("cmd /c E:\\fangorn\disconnection.bat")->dailyAt('11:30');
     }
 
     /**

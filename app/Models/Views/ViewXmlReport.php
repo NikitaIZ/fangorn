@@ -12,11 +12,6 @@ class ViewXmlReport extends Model
 
     protected $table = "xml_reports_view";
 
-    public static function data($row, $dato, $data = array()){
-        $data = DB::table('xml_reports_view')->where($row, $dato)->get();
-        return $data;
-    }
-
     public static function check($row, $dato){
         if (DB::table('xml_reports_view')->where($row, $dato)->exists()) {
             return true;

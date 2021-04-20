@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\BuffetController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DocumentController;
@@ -30,58 +33,62 @@ Route::get('contac-us', function () {
 
 //Rutas de los Tanques
 Route::middleware(['auth:sanctum', 'verified'])->get('tanks', 
-    [TankController::class, 'index'])->name('tanks.index');
+                                                    [TankController::class, 'index']
+                                                    )->name('tanks.index');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('tanks/create', 
-    [TankController::class, 'createTank'])->name('tanks.create');
+                                                    [TankController::class, 'createTank']
+                                                    )->name('tanks.create');
 
 Route::middleware(['auth:sanctum', 'verified'])->post('tanks/create', 
-    [TankController::class, 'updateTank'])->name('tanks.update');
+                                                    [TankController::class, 'updateTank']
+                                                    )->name('tanks.update');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('tanks/reports/create', 
-    [TankController::class, 'createReport'])->name('tanks.reports.create');
+                                                    [TankController::class, 'createReport']
+                                                    )->name('tanks.reports.create');
 
 Route::middleware(['auth:sanctum', 'verified'])->post('tanks/reports/create', 
-    [TankController::class, 'updateReport'])->name('tanks.reports.update');
+                                                    [TankController::class, 'updateReport']
+                                                    )->name('tanks.reports.update');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('tanks/{tank}', 
-    [TankController::class, 'show'])->name('tanks.show');
+                                                    [TankController::class, 'show']
+                                                    )->name('tanks.show');
 
 //Rutas de inicio
 
 Route::middleware(['auth:sanctum', 'verified'])->get('dashboard', 
-    [HomeController::class, 'index'])->name('dashboard');
+                                                    [HomeController::class, 'index']
+                                                    )->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('test', 
-    [HomeController::class, 'test'])->name('test');
+Route::get('register', function () { return view('auth.register'); })->name('register');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('register', function () {
-    return view('auth.register');
-})->name('register');
-
-Route::middleware(['auth:sanctum', 'verified'])->get('CCTV', function () {
-    return view('welcome');
-})->name('cctv');
+Route::middleware(['auth:sanctum', 'verified'])->get('CCTV', 
+                                                    function () {
+                                                    return view('welcome');
+                                                    })->name('cctv');
 
 //Ruta xml
 
 Route::middleware(['auth:sanctum', 'verified'])->get('xmls', 
-    [XmlController::class, 'index'])->name('xml.index');
+                                                    [XmlController::class, 'index']
+                                                    )->name('xml.index');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('xmls/create', 
-    [XmlController::class, 'createXml'])->name('xml.create');
-
-Route::middleware(['auth:sanctum', 'verified'])->post('xmls/create', 
-    [XmlController::class, 'updateXml'])->name('xml.update');
-
-Route::middleware(['auth:sanctum', 'verified'])->get('xmls/reports/create', 
-    [XmlController::class, 'createReport'])->name('reports.create');
-
-Route::middleware(['auth:sanctum', 'verified'])->post('xmls/reports/create', 
-    [XmlController::class, 'updateReport'])->name('reports.update');
+                                                    [XmlController::class, 'createXml']
+                                                    )->name('xml.create');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('xmls/{xml}', 
-    [XmlController::class, 'show'])->name('xmls.show');
+                                                    [XmlController::class, 'show']
+                                                    )->name('xmls.show');
 
+//Buffet
 
+Route::middleware(['auth:sanctum', 'verified'])->get('buffet',
+                                                    [BuffetController::class, 'index']
+                                                    )->name('buffet');
 
+Route::middleware(['auth:sanctum', 'verified'])->put('buffet',
+                                                    [BuffetController::class, 'update']
+                                                    )->name('buffet.update');

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use DateTime;
 use DateTimeZone;
 
-use App\Models\Tank;
-use App\Models\TankReport;
+use App\Models\Tanks\Tank;
+use App\Models\Tanks\TankReport;
 use App\Models\Views\ViewTankReport;
 
 use Illuminate\Http\Request;
@@ -16,9 +16,7 @@ class TankController extends Controller
 {
     public function index(){
         $data = ViewTankReport::data();
-
         $reports = ViewTankReport::paginate(10);
-
         foreach ($reports as $key => $value) {
             $date = DateTime::createFromFormat('Y-m-d G:i:s',
                                                 $value['Actualizado'],
@@ -26,7 +24,6 @@ class TankController extends Controller
             $date->setTimeZone(new DateTimeZone('America/Caracas'));
             $value['Actualizado'] = $date->format('Y-m-d g:i A');
         }
-
         return view('tanks.index', compact('reports', 'data'));
     }
 

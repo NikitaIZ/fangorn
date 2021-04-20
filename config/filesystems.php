@@ -51,6 +51,13 @@ return [
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
         ],
+        'Z' => [
+            'driver' => 'local',
+            'root' => 'Z:\\',
+            'username' => 'myalaupari',
+            'password' => '123.abcd',
+            'visibility' => 'public',
+        ],
 
     ],
 
