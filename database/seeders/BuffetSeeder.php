@@ -14,10 +14,12 @@ class BuffetSeeder extends Seeder
      */
     public function run()
     {
+        $buffet->save();
+
         $buffet = new Buffet();
 
         $buffet->user_id  = 1;
-        $buffet->service  = 'breakfast';
+        $buffet->service  = 'Breakfast Plus';
         $buffet->adults   = 0;
         $buffet->children = 0;
 
@@ -26,7 +28,7 @@ class BuffetSeeder extends Seeder
         $buffet = new Buffet();
 
         $buffet->user_id  = 1;
-        $buffet->service  = 'lunch';
+        $buffet->service  = 'Breakfast';
         $buffet->adults   = 0;
         $buffet->children = 0;
 
@@ -35,7 +37,7 @@ class BuffetSeeder extends Seeder
         $buffet = new Buffet();
 
         $buffet->user_id  = 1;
-        $buffet->service  = 'dinner';
+        $buffet->service  = 'Lunch';
         $buffet->adults   = 0;
         $buffet->children = 0;
 
@@ -44,7 +46,7 @@ class BuffetSeeder extends Seeder
         $buffet = new Buffet();
 
         $buffet->user_id  = 1;
-        $buffet->service  = 'brunch';
+        $buffet->service  = 'Dinner';
         $buffet->adults   = 0;
         $buffet->children = 0;
 
@@ -53,7 +55,7 @@ class BuffetSeeder extends Seeder
         $buffet = new Buffet();
 
         $buffet->user_id  = 1;
-        $buffet->service  = 'pool day';
+        $buffet->service  = 'Brunch';
         $buffet->adults   = 0;
         $buffet->children = 0;
 
@@ -62,10 +64,17 @@ class BuffetSeeder extends Seeder
         $buffet = new Buffet();
 
         $buffet->user_id  = 1;
-        $buffet->service  = 'additional pax';
+        $buffet->service  = 'Pool Day';
         $buffet->adults   = 0;
         $buffet->children = 0;
 
         $buffet->save();
+
+        $buffet = new Buffet();
+
+        $buffet->user_id  = 1;
+        $buffet->service  = 'Additional Pax';
+        $buffet->adults   = 0;
+        $buffet->children = 0;
     }
 }

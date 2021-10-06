@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateXmlReport extends Migration
+class CreateDolarsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreateXmlReport extends Migration
      */
     public function up()
     {
-        Schema::create('xml_reports', function (Blueprint $table) {
+        Schema::create('dolars', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->index();
+            $table->integer('daily_rate');
             $table->string('date');
             $table->timestamps();
         });
@@ -27,6 +29,6 @@ class CreateXmlReport extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('xml_reports');
+        Schema::dropIfExists('dolars');
     }
 }

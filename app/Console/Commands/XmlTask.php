@@ -87,6 +87,7 @@ class XmlTask extends Command
             $XmlData->year       = $dato['YEAR'];
             $XmlData->save();
         }
+
     }
 
     private function orderXml($urlManager, $urlBuc, $name, $i=0, $all_data = array()){

@@ -9,3 +9,11 @@
 .table tbody tr:nth-child(2n+1){
     @apply bg-gray-200;
 }
+
+.text456 {
+    background-color: black;
+}
+
+body {
+    background-color: #e2e4e759 !important;
+}

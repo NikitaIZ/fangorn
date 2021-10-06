@@ -13,12 +13,15 @@
         <!-- Styles -->
         <link rel="shortcut icon" href="{{ '/logo.jpg' }}">
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-
+        <link rel="stylesheet" href="{{ mix('sass/app.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
         @livewireStyles
 
         <!-- Scripts -->
         <script src="https://kit.fontawesome.com/3fc5775cbc.js" crossorigin="anonymous"></script>
         <script src="{{ mix('js/app.js') }}" defer></script>
+        @laravelPWA
+
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />

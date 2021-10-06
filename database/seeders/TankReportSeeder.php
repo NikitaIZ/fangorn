@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\TankReport;
+use App\Models\Tanks\TankReport;
 use Illuminate\Database\Seeder;
 
 class TankReportSeeder extends Seeder

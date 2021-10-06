@@ -6,7 +6,7 @@
 
         <x-jet-validation-errors class="mb-4" />
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register.create') }}">
             @csrf
 
             <div>
@@ -29,6 +29,18 @@
                 <x-jet-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
             </div>
 
+            <div class="mt-4">
+                <x-jet-label for="nivel" value="{{ __('Selecciona Nivel') }}" />
+                <select id="nivel" name="nivel" class="block mt-1 w-full">
+                    <option value="2">Ainur</option>
+                    <option value="3">Valar</option>
+                    <option value="4">Maiar</option>
+                    <option value="5">Elfos</option>
+                    <option value="6">Enanos</option>
+                    <option value="7">Hombres</option>
+                </select>
+            </div>
+
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
                 <div class="mt-4">
                     <x-jet-label for="terms">
@@ -47,12 +59,12 @@
             @endif
 
             <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
+                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('dashboard') }}">
+                    {{ __('Cancelar') }}
                 </a>
 
                 <x-jet-button class="ml-4">
-                    {{ __('Register') }}
+                    {{ __('Registrar') }}
                 </x-jet-button>
             </div>
         </form>

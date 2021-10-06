@@ -42,6 +42,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'imgUser' => [
+            'driver' => 'local',
+            'root' => 'img',
+            'url' => 'http://10.80.22.172:8088/img',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -27,30 +27,12 @@ class TankController extends Controller
         return view('tanks.index', compact('reports', 'data'));
     }
 
-    public function createReport(){
-        $tanks = Tank::all();
-        return view('tanks.create-report', compact('tanks'));
-    }
-
-    public function updateReport(Request $request){
-        $reports = new TankReport();
-
-        $reports->user_id     = Auth::user()->currentTeam->id;
-        $reports->tank_id     = $request->tanque;
-        $reports->liters      = $request->litros;
-        $reports->description = $request->descripcion;
-
-        $reports->save();
-
-        return redirect()->route('tanks.index');
-    }
-
-    public function createTank(){
+    public function create(){
         $tanks = Tank::all();
         return view('tanks.create-tank', compact('tanks'));
     }
 
-    public function updateTank(Request $request){
+    public function store(Request $request){
         $tanks = new Tank();
 
         $tanks->location = $request->ubicacion;
