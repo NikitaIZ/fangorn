@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Audit\Reports;
 
 use Livewire\Component;
-use App\Models\Views\ViewXmlReport;
+use App\Models\Views\ViewXmlHistoryReport;
 
 class XMLShow extends Component
 {
@@ -15,7 +15,8 @@ class XMLShow extends Component
 
     public function render()
     {
-        $data = ViewXmlReport::where('ID', $this->xml)->get();
-        return view('livewire.audit.reports.x-m-l-show', compact('data'));
+        $data = ViewXmlHistoryReport::where('description', 'LIKE', '%' . $this->search . '%')->where('id', $this->xml)->orderBy('headings_id')->get();
+
+        return view('livewire.audit.reports.xml-show', compact('data'));
     }
 }

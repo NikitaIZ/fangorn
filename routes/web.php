@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-use App\Mail\ContactUsMailable;
 use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +17,14 @@ Route::get('/', function () { return redirect('login'); });
 
 Route::get('/offline', function () { return view('/vendor/laravelpwa/offline'); });
 
-Route::get('contac-us', function () {
-    $correo = new ContactUsMailable;
-    Mail::to('michelle6yalaupari@gmail.com')->send($correo);
+Route::get('send-mail', function () {
+
+    $details = [
+        'title' => 'Mail from ItSolutionStuff.com',
+        'body' => 'This is for testing email using smtp'
+    ];
+
+    Mail::to('michelle6yalaupari@gmail.com')->send(new \App\Mail\MyTestMail($details));
+
+    dd("Email is Sent.");
 });

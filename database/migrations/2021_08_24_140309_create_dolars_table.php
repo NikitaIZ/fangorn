@@ -16,7 +16,8 @@ class CreateDolarsTable extends Migration
         Schema::create('dolars', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->index();
-            $table->integer('daily_rate');
+            $table->foreignId('report_id')->index();
+            $table->decimal('daily_rate', 15, 5);
             $table->string('date');
             $table->timestamps();
         });

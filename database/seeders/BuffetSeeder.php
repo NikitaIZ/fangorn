@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Buffet;
+use App\Models\Audit\Buffet;
 use Illuminate\Database\Seeder;
 
 class BuffetSeeder extends Seeder
@@ -14,8 +14,6 @@ class BuffetSeeder extends Seeder
      */
     public function run()
     {
-        $buffet->save();
-
         $buffet = new Buffet();
 
         $buffet->user_id  = 1;
@@ -76,5 +74,7 @@ class BuffetSeeder extends Seeder
         $buffet->service  = 'Additional Pax';
         $buffet->adults   = 0;
         $buffet->children = 0;
+
+        $buffet->save();
     }
 }

@@ -14,12 +14,13 @@ class CreateDolarsView extends Migration
     public function up()
     {
         $dolars = DB::table('dolars')
-        ->select('dolars.id as ID',
-                'users.name as Usuario',
-                'dolars.daily_rate as Tasa_del_día',
-                'dolars.date as Fecha',
-                'dolars.created_at as Subido',
-                'dolars.updated_at as Actualizado')
+        ->select('dolars.id as id',
+                'users.id as user_id',
+                'users.name as user',
+                'dolars.daily_rate as daily_rate',
+                'dolars.date as date',
+                'dolars.created_at as created_at',
+                'dolars.updated_at as updated_at')
         ->leftJoin('users', 'users.id', '=', 'dolars.user_id');
 
         Schema::createView('dolars_view', $dolars);

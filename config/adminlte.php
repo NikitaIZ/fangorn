@@ -226,7 +226,7 @@ return [
 
     'menu' => [
         // Navbar items:
-        [
+        /*[
             'type'         => 'navbar-search',
             'text'         => 'search',
             'topnav_right' => true,
@@ -234,7 +234,7 @@ return [
         [
             'type'         => 'fullscreen-widget',
             'topnav_right' => true,
-        ],
+        ],*/
 
         // Sidebar items:
         [
@@ -263,20 +263,57 @@ return [
                 [
                     'can'   => 'xmls.index',
                     'text'  => 'Reportes',
-                    'icon'  => 'fas fa-fw fa-book-open',
-                    'route' => 'xmls.index',
+                    'icon'  => 'fa-solid fa-fw fa-book',
+                    'route' => 'audit.reports.index',
                 ],
                 [
                     'can'   => 'dolar.index',
-                    'text'  => 'Dolar',
+                    'text'  => 'Tasas de Cambio',
                     'icon'  => 'fas fa-fw fa-hand-holding-usd',
-                    'route' => 'dolar.index',
+                    'route' => 'audit.dolars.index',
+                ],
+                [
+                    'can'   => 'restaurant.index',
+                    'text'  => 'Restaurantes',
+                    'icon'  => 'fa-solid fa-fw fa-utensils',
+                    'route' => 'audit.restaurants.index',
                 ],
                 [
                     'can'   => 'buffet.index',
                     'text'  => 'Buffet',
-                    'icon'  => 'fas fa-fw fa-file-invoice-dollar',
-                    'route' => 'buffet.index',
+                    'icon'  => 'fa-solid fa-fw fa-file-invoice-dollar',
+                    'route' => 'audit.buffets.index',
+                ],
+            ],
+        ],
+        [
+            'can'     => 'test',
+            'text'    => 'Reservas',
+            'icon'    => 'fas fa-fw fa-address-book',
+            'submenu' => [
+                [
+                    'can'   => 'test',
+                    'text'  => 'Rev Mgr',
+                    'icon'  => 'fas fa-fw fa-book-open',
+                    'route' => 'reserves.manager.index',
+                ],
+                [
+                    'can'   => 'test',
+                    'text'  => 'Reporte',
+                    'icon'  => 'fas fa-fw fa-book-open',
+                    'route' => 'reserves.dinners.index',
+                ],
+                [
+                    'can'   => 'test',
+                    'text'  => 'Navidad',
+                    'icon'  => 'fas fa-fw fa-gift',
+                    'route' => 'reserves.dinners.christmas',
+                ],
+                [
+                    'can'   => 'test',
+                    'text'  => 'Año Nuevo',
+                    'icon'  => 'fas fa-fw fa-glass-cheers',
+                    'route' => 'reserves.dinners.newYear',
                 ],
             ],
         ],
@@ -442,7 +479,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11',
                 ],
             ],
         ],
@@ -462,12 +499,32 @@ return [
             ],
         ],
         'jetstream' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '/css/app.css',
+                ],
+            ],
+        ],
+        'styleSass' => [
             'active' => true,
             'files' => [
                 [
                     'type' => 'css',
                     'asset' => false,
                     'location' => '/sass/app.css',
+                ],
+            ],
+        ],
+        'styleJS' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '/js/app.js',
                 ],
             ],
         ],

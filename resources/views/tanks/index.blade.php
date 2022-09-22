@@ -31,7 +31,7 @@
                 <div class="max-w-7xl w-full mx-auto py-6 sm:px-6 lg:px-8">
                     <x-table-reports-tanks>
                         <x-slot name="boton1">
-                            <a href="{{ route('reports.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <a href="" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Nuevo Reporte
                             </a>
                         </x-slot>

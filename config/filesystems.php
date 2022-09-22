@@ -45,7 +45,7 @@ return [
         'imgUser' => [
             'driver' => 'local',
             'root' => 'img',
-            'url' => 'http://10.80.22.172:8088/img',
+            'url' => 'http://190.205.33.228:8088/img',
             'visibility' => 'public',
         ],
 
@@ -61,8 +61,8 @@ return [
         'Z' => [
             'driver' => 'local',
             'root' => 'Z:\\',
-            'username' => 'myalaupari',
-            'password' => '123.abcd',
+            'username' => 'rbello',
+            'password' => 'sedoca-321',
             'visibility' => 'public',
         ],
 

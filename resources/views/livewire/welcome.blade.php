@@ -15,8 +15,8 @@
 
 <script>
 
-   
     const data_year = {!! json_encode($data_year) !!};
+
     function financial(x) {
         return Number.parseFloat(x).toFixed(2);
     }

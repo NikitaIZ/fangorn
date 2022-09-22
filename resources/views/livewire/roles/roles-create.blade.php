@@ -30,7 +30,7 @@
             <input wire:model="search" class="form-control" placeholder="Ingrese Nombre o Correo de Usuario" value='ashai'>
         </div>
         @if ($roles->count())
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div class="table-responsive"> 
                     <table class="table table-striped">
                         <thead>

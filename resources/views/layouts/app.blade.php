@@ -18,10 +18,9 @@
         @livewireStyles
 
         <!-- Scripts -->
-        <script src="https://kit.fontawesome.com/3fc5775cbc.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/9b2a6b8fb1.js" crossorigin="anonymous"></script>
         <script src="{{ mix('js/app.js') }}" defer></script>
         @laravelPWA
-
     </head>
     <body class="font-sans antialiased">
         <x-jet-banner />

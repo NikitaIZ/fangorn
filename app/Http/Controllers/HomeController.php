@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Buffet;
-use App\Models\Dolar;
-use App\Models\Xml\XmlData;
-use App\Models\Xml\XmlReport;
 use Illuminate\Http\Request;
+
+use App\Models\Audit\Dolar;
+use App\Models\Audit\Buffet;
+use App\Models\Audit\Xml\XmlHistoryData;
+use App\Models\Audit\Xml\XmlHistoryReport;
+use App\Models\Audit\Xml\XmlForecastData;
+use App\Models\Audit\Xml\XmlForecastDate;
+use App\Models\Audit\Xml\XmlForecastReport;
 
 class HomeController extends Controller
 {
@@ -22,228 +26,1030 @@ class HomeController extends Controller
         return $data->USD;
     }
 
-    private function orderDate($date, $option){
-        switch ($option) {
-            case 0:
-                $chara = str_split($date);
-                $newDate = $chara[0] . $chara[1] . "/" . 
-                        $chara[2] . $chara[3] . "/" . 
-                        $chara[4] . $chara[5] ;
-                break;
-            case 1: 
-                $chara = explode("/", $date);
-                $order = $chara[1] . "/" . 
-                        $chara[0] . "/" . 
-                        $chara[2];
-                $newDate= date("d/m/y",strtotime($order."+ 1 days"));
-                break;
-            case 2: 
-                $chara = explode("/", $date);
-                $order = $chara[0] . "-" . 
-                        $chara[1] . "-20" . 
-                        $chara[2];
-                $newDate= date("l",strtotime($order."+ 1 days"));
-                switch ($newDate) {
-                    case 'Monday':
-                        $newDate = 'Lunes';
-                        break;
-                    case 'Tuesday':
-                        $newDate = 'Martes';
-                        break;
-                    case 'Wednesday':
-                        $newDate = 'Miercoles';
-                        break;
-                    case 'Thursday':
-                        $newDate = 'Jueves';
-                        break;
-                    case 'Friday':
-                        $newDate = 'Viernes';
-                        break;
-                    case 'Saturday':
-                        $newDate = 'Sabado';
-                        break;
-                    case 'Sunday':
-                        $newDate = 'Domingo';
-                        break;
+    private function updateDataJson($dayli){
+        $data['dolar'] = $dayli;
+        $dataJson = json_encode($data, true);
+        file_put_contents('D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads\datos.json', $dataJson);
+
+        $ftp_server="ftp.wyndhamconcorde.com";
+        $ftp_user_name="pupjhhbnaibb";
+        $ftp_user_pass="wyndCCE.2022#%!";
+        $file = "D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads\datos.json";//tobe uploaded
+        $remote_file = "public_html/wp/wp-content/uploads/datos.json";
+
+        // set up basic connection
+        $conn_id = ftp_connect($ftp_server);
+        if($conn_id){
+            // login with username and password
+            ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
+            ftp_put($conn_id, $remote_file, $file, FTP_ASCII);
+            ftp_close($conn_id);
+        }
+    }
+
+    private function allData($date, $allData = array())
+    {
+        $date_m = date("Y-m-d",  strtotime(date($date) . "- 2 days"));
+        $allData["yesterday"] = $this->get_yesterday_data($date);
+        $allData["today"]     = $this->get_today_data($date);
+        $allData["week"]      = $this->get_week_data($date);
+        $allData["month"][0]  = $this->get_month_data($date);
+        $allData["month"][1]  = $this->get_month_data($date, 1);
+        $allData["month"][2]  = $this->get_month_data($date, 2);
+        $allData["year"]      = $this->get_year_data($date);
+        $allData["types"]     = $this->get_types_data($date, $date);
+        $allData["buffet"]    = Buffet::get();
+
+        if ($allData["today"]["PDS"] >= 50){
+            $allData["box"]["color"][0] = "small-box bg-warning";
+            $allData["box"]["color"][1] = "small-box bg-danger";
+        }else{
+            $allData["box"]["color"][0] = "small-box bg-warning-off";
+            $allData["box"]["color"][1] = "small-box bg-danger-off";
+        }
+
+        return $allData;
+    }
+
+    private function dolar($var)
+    {
+        $dolar  = Dolar::where('date', $var)->value('daily_rate');
+        if ($dolar == null){
+            $dolar = Dolar::orderByDesc('date')->value('daily_rate');
+        }
+        return $dolar;
+    }
+
+    private function get_color($id)
+    {
+        switch ($id) {
+            case 0: return "color:white; background-color: rgba(0, 123, 255 "; break;
+            case 1: return "color:white; background-color: rgba(40, 167, 69 "; break;
+            case 2: return "color:white; background-color: rgba(23, 162, 184 "; break;
+            case 3: return "color:black; background-color: rgba(255, 193, 7 "; break;
+            case 4: return "color:white; background-color: rgba(220, 53, 69 "; break;
+            case 5: return "color:white; background-color: rgba(108, 117, 125 "; break;
+            case 6: return "color:white; background-color: rgba(52, 58, 64 "; break;
+            case 7: return "color:white; background-color: rgba(232, 5, 255 "; break;
+        }
+    }
+
+    private function get_color_line($id)
+    {
+        switch ($id) {
+            case 0: return "rgba(0, 123, 255, 0.5)"; break;
+            case 1: return "rgba(40, 167, 69, 0.5)"; break;
+            case 2: return "rgba(23, 162, 184, 0.5)"; break;
+            case 3: return "rgba(255, 193, 7, 0.5)"; break;
+            case 4: return "rgba(220, 53, 69, 0.5)"; break;
+            case 5: return "rgba(108, 117, 125, 0.5)"; break;
+            case 6: return "rgba(52, 58, 64, 0.5)"; break;
+            case 7: return "rgba(232, 5, 255, 0.5)"; break;
+        }
+    }
+
+    private function get_name_day($date)
+    {
+        switch (date('w', $date)){
+            case 0: return "Domingo"; break;
+            case 1: return "Lunes"; break;
+            case 2: return "Martes"; break;
+            case 3: return "Miercoles"; break;
+            case 4: return "Jueves"; break;
+            case 5: return "Viernes"; break;
+            case 6: return "Sabado"; break;
+        }
+    }
+
+    private function get_name_month($date)
+    {
+        switch ($date){
+            case 1:  return "Ene"; break;
+            case 2:  return "Feb"; break;
+            case 3:  return "Mar"; break;
+            case 4:  return "Abr"; break;
+            case 5:  return "May"; break;
+            case 6:  return "Jun"; break;
+            case 7:  return "Jul"; break;
+            case 8:  return "Ago"; break;
+            case 9:  return "Sep"; break;
+            case 10: return "Oct"; break;
+            case 11: return "Nov"; break;
+            case 12: return "Dic"; break;
+        }
+    }
+
+    private function get_description_name($name)
+    {
+        switch ($name) {
+            case "COM": return "Commercial"; break;
+            case "MEG": return "Mega Agency"; break;
+            case "NAT": return "Corp Pref-National"; break;
+            case "LOC": return "Corp Pref-Local"; break;
+            case "GOV": return "Government"; break;
+            case "PKG": return "Package"; break;
+            case "BPR": return "Brand Promotions"; break;
+            case "INT": return "Internet Mktg"; break;
+            case "IOP": return "Opaque Internet"; break;
+            case "DIS": return "Qualified Discounts"; break;
+            case "WHD": return "Travel Agent"; break;
+            case "WHI": return "Wholesale International"; break;
+            case "WHC": return "Wholesale-Cruise"; break;
+            case "GCP": return "Group-Corporate"; break;
+            case "GCM": return "Group-CMP"; break;
+            case "GDP": return "European Plan"; break;
+            case "GEP": return "Group EP"; break;
+            case "GTR": return "Group-Training"; break;
+            case "GTT": return "Group Tour & Travel"; break;
+            case "GAS": return "Group-Association"; break;
+            case "GMP": return "Group MMP"; break;
+            case "GSF": return "Group-SMERF"; break;
+            case "GGV": return "Group-Government"; break;
+            case "CNT": return "Time Share"; break;
+            case "ATP": return "Contract Airline Crew"; break;
+            case "HSU": return "House Use"; break;
+            case "SLB": return "SuperLiga"; break;
+            case "CMP": return "Complimentary"; break;
+            case "WHPI": return "Wholesale Property International"; break;
+            case "WHPN": return "Wholesale Property National"; break;
+            case "WEDD": return "Weeding"; break;
+        }
+    }
+
+    private function get_types_data($date_start, $date)
+    {
+        $ROOMS_OOO = XmlHistoryData::join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                    ->where('xml_history_reports.date', $date_start)
+                                    ->where('heading_id', 3)
+                                    ->value('day');
+
+        $dats = XmlHistoryReport::select('date')
+                                ->where('date', '>=', $date_start)
+                                ->where('date', '<=', $date)
+                                ->get()->toArray();
+
+        $hdgg = XmlHistoryData::select('xml_headings.name as HDG')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_headings.name', 'like', '%_ROOMS%')
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->groupBy('xml_headings.id')
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        $torr = XmlHistoryData::select('xml_headings.name as HDG', 'day as HAB', 'xml_history_reports.date')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_headings.name', 'like', '%_ROOMS%')
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        $toar = XmlHistoryData::select('xml_headings.name as HDG', 'day as PAA', 'xml_history_reports.date')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_headings.name', 'like', '%_ADULTS%')
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        $tocr = XmlHistoryData::select('xml_headings.name as HDG', 'day as PAC', 'xml_history_reports.date')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_headings.name', 'like', '%_CHILDREN%')
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        foreach ($hdgg as $key => $value) {
+            $pieces = explode("_", $value['HDG']);
+            $types[$key]['head'] = $value['HDG'];
+            $types[$key]['name'] = $pieces[0];
+            $types[$key]["descrip"] = $this->get_description_name($types[$key]['name']);
+        }
+
+        foreach ($types as $order => $type) {
+            foreach ($dats as $key => $date) {
+                foreach ($torr as $value) {
+                    if ($type['head'] == $value['HDG'] && $date['date'] == $value['date']) {
+                        $types[$order]['rooms'][$key] = $value['HAB'];
+                        $types[$order]['adults'][$key] = null;
+                        $types[$order]['childrem'][$key] = null;
+                    }
                 }
-                break;
-            default:
-                break;
+                foreach ($toar as $value) {
+                    $pieces = explode("_", $value['HDG']);
+                    if ($type['name'] == $pieces[0] && $date['date'] == $value['date']) {
+                        $types[$order]['adults'][$key] = $value['PAA'];
+                    }
+                }
+                foreach ($tocr as $value) {
+                    $pieces = explode("_", $value['HDG']);
+                    if ($type['name'] == $pieces[0] && $date['date'] == $value['date']) {
+                        $types[$order]['childrem'][$key] = $value['PAC'];
+                    }
+                }
+            }
         }
-        return $newDate;
+
+        foreach ($types as $order => $type) {
+            $types[$order]['color'] = $this->get_color($order);
+            $types[$order]['lines'] = $this->get_color_line($order);
+            foreach ($dats as $key => $date) {
+                if (array_key_exists($key, $type['rooms']) == false) {
+                    $types[$order]['rooms'][$key] = null;
+                    $types[$order]['adults'][$key] = null;
+                    $types[$order]['childrem'][$key] = null;
+                    $types[$order]['people'][$key] = null;
+                    $types[$order]['rat'][$key] = null;
+                    $types[$order]['per'][$key] = null;
+                }else{
+                    if ($type['adults'][$key] != null) {
+                        $types[$order]['people'][$key] = $type['adults'][$key] + $type['childrem'][$key];
+                        $types[$order]['rat'][$key]    = strval(round($types[$order]['people'][$key] / $type['rooms'][$key], 2));
+                        $types[$order]["per"][$key]    = $type['rooms'][$key] / $ROOMS_OOO * 100;
+                    }else{
+                        $types[$order]['people'][$key] = null;
+                        $types[$order]['rat'][$key] = null;
+                        $types[$order]['per'][$key] = null;
+                    }
+                }
+            }
+            ksort($types[$order]['rooms']);
+            ksort($types[$order]['adults']);
+            ksort($types[$order]['childrem']);
+            ksort($types[$order]['people']);
+            ksort($types[$order]['rat']);
+            ksort($types[$order]['per']);
+        }
+
+        return $types;
     }
 
-    public function index($i = 6, $dataYear = array(), $dataWeek = array()){
-        $dateToday     = date("d/m/y",strtotime("- 1 days"));
-        $dateYesterday = date("d/m/y",strtotime("- 2 days"));
-        
-        $reportToday     = XmlReport::where('date', $dateToday)->value('id');
-        $reportYesterday = XmlReport::where('date', $dateYesterday)->value('id');
+    private function get_types_data_history($date_start, $date)
+    {
+        $ROOMS_OOO = XmlHistoryData::join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                    ->where('xml_history_reports.date', $date_start)
+                                    ->where('heading_id', 3)
+                                    ->value('day');
 
-        $dolar = Dolar::where('report_id', $reportToday)->value('daily_rate');
+        $dats = XmlHistoryReport::select('date')
+                                ->where('date', '>=', $date_start)
+                                ->where('date', '<=', $date)
+                                ->get()->toArray();
 
-        if ($dolar == null){
-            $dolar = Dolar::orderByDesc('date')->value('daily_rate');
+        $hdgg = XmlHistoryData::select('xml_headings.name as HDG')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_headings.name', 'like', '%_ROOMS%')
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->groupBy('xml_headings.id')
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        $torr = XmlHistoryData::select('xml_headings.name as HDG', 'day as HAB' , 'xml_history_reports.date')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_headings.name', 'like', '%_ROOMS%')
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        $toar = XmlHistoryData::select('xml_headings.name as HDG', 'day as PAA', 'xml_history_reports.date')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_headings.name', 'like', '%_ADULTS%')
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        $tocr = XmlHistoryData::select('xml_headings.name as HDG', 'day as PAC', 'xml_history_reports.date')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_headings.name', 'like', '%_CHILDREN%')
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        foreach ($hdgg as $key => $value) {
+            $pieces = explode("_", $value['HDG']);
+            $types[$key]['head'] = $value['HDG'];
+            $types[$key]['name'] = $pieces[0];
+            $types[$key]["descrip"] = $this->get_description_name($types[$key]['name']);
         }
 
-        $buffet = Buffet::select('*')->get();
-
-        $week = XmlReport::latest()->take(7)->get();
-        
-        while ($i >= 0) {
-            $dolarRate = Dolar::where('report_id', $week[$i]->id)->value('daily_rate');
-            $dataWeek['date'][$i]   = $this->orderDate($week[$i]->date, 2);
-
-            if ($dolarRate != null){
-                $dataWeek['ADR'][$i]    = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 122)->value('day') / $dolarRate;
-                $dataWeek['RevPAR'][$i] = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 123)->value('day') / $dolarRate;
-            }else{
-                $dataWeek['ADR'][$i]    = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 122)->value('day') / $dolar;
-                $dataWeek['RevPAR'][$i] = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 123)->value('day') / $dolar;
+        foreach ($types as $order => $type) {
+            foreach ($dats as $key => $date) {
+                foreach ($torr as $value) {
+                    if ($type['head'] == $value['HDG'] && $date['date'] == $value['date']) {
+                        $types[$order]['rooms'][$key] = $value['HAB'];
+                        $types[$order]['adults'][$key] = null;
+                        $types[$order]['childrem'][$key] = null;
+                    }
+                }
+                foreach ($toar as $value) {
+                    $pieces = explode("_", $value['HDG']);
+                    if ($type['name'] == $pieces[0] && $date['date'] == $value['date']) {
+                        $types[$order]['adults'][$key] = $value['PAA'];
+                    }
+                }
+                foreach ($tocr as $value) {
+                    $pieces = explode("_", $value['HDG']);
+                    if ($type['name'] == $pieces[0] && $date['date'] == $value['date']) {
+                        $types[$order]['childrem'][$key] = $value['PAC'];
+                    }
+                }
             }
-
-            $dataWeek['Hab'][$i]        = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 2) ->value('day');
-            $dataWeek['Pax'][$i]        = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 16)->value('day');
-            $dataWeek['DEP'][$i]        = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 95)->value('day');
-            $dataWeek['ARR'][$i]        = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 93)->value('day');
-            $dataWeek['Per'][$i]        = XmlData::where('report_id', $week[$i]->id)->where('heading_id', 36)->value('day');
-
-            $i--; 
         }
 
-        $dateYear = date("d/m",strtotime("- 1 days"));
-        $xmlYear  = XmlReport::select('*')->where('date', 'LIKE', '%' . $dateYear . '%')->orderByDesc('date')->get();
-        $date     = date('d/m/Y');
-
-        foreach ($xmlYear as $key => $value) {
-            $dataYear['id'][$key]         = $value['id'];
-            $dataYear['date'][$key]       = $this->orderDate($value['date'], 1);
-            $dolarRate = Dolar::where('report_id', $value['id'])->value('daily_rate');
-
-            if ($dolarRate != null){
-                $dataYear['ADR'][$key]    = XmlData::where('report_id', $value['id'])->where('heading_id', 122)->value('day') / $dolarRate;
-                $dataYear['RevPAR'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 123)->value('day') / $dolarRate;
-            }else{
-                $dataYear['ADR'][$key]    = XmlData::where('report_id', $value['id'])->where('heading_id', 122)->value('day') / $dolar;
-                $dataYear['RevPAR'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 123)->value('day') / $dolar;
+        foreach ($types as $order => $type) {
+            $types[$order]['color'] = $this->get_color($order);
+            $types[$order]['lines'] = $this->get_color_line($order);
+            foreach ($dats as $key => $date) {
+                if (array_key_exists($key, $type['rooms']) == false) {
+                    $types[$order]['rooms'][$key] = null;
+                    $types[$order]['adults'][$key] = null;
+                    $types[$order]['childrem'][$key] = null;
+                    $types[$order]['people'][$key] = null;
+                    $types[$order]['rat'][$key] = null;
+                    $types[$order]['per'][$key] = null;
+                }else{
+                    if ($type['adults'][$key] != null) {
+                        $types[$order]['people'][$key] = $type['adults'][$key] + $type['childrem'][$key];
+                        $types[$order]['rat'][$key]    = strval(round($types[$order]['people'][$key] / $type['rooms'][$key], 2));
+                        $types[$order]["per"][$key]    = $type['rooms'][$key] / $ROOMS_OOO * 100;
+                    }else{
+                        $types[$order]['people'][$key] = null;
+                        $types[$order]['rat'][$key] = null;
+                        $types[$order]['per'][$key] = null;
+                    }
+                }
             }
-
-            $dataYear['Hab'][$key]        = XmlData::where('report_id', $value['id'])->where('heading_id', 2)  ->value('day');
-            $dataYear['Pax'][$key]        = XmlData::where('report_id', $value['id'])->where('heading_id', 16) ->value('day');
-            $dataYear['DEP'][$key]        = XmlData::where('report_id', $value['id'])->where('heading_id', 95) ->value('day');
-            $dataYear['ARR'][$key]        = XmlData::where('report_id', $value['id'])->where('heading_id', 93) ->value('day');
-            $dataYear['Per']['Dia'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 36) ->value('day');
-            $dataYear['Per']['Mes'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 36) ->value('month');
-            $dataYear['Per']['Año'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 36) ->value('year');
+            ksort($types[$order]['rooms']);
+            ksort($types[$order]['adults']);
+            ksort($types[$order]['childrem']);
+            ksort($types[$order]['people']);
+            ksort($types[$order]['rat']);
+            ksort($types[$order]['per']);
         }
 
-        $percentage = array(
-                            'ayer' => XmlData::where('report_id', $reportYesterday)->where('heading_id', 36)->value('day'),
-                            'dia'  => XmlData::where('report_id', $reportToday)    ->where('heading_id', 36)->value('day'),
-                            'mes'  => XmlData::where('report_id', $reportToday)    ->where('heading_id', 36)->value('month'),
-                            'año'  => XmlData::where('report_id', $reportToday)    ->where('heading_id', 36)->value('year')
-                            );
-
-        if ($percentage['dia']>= 50){
-            $colors = array(
-                            0 => "small-box bg-warning",
-                            1 => "small-box bg-danger"
-                            );
-        }else{
-            $colors = array(
-                            0 => "small-box bg-warning-off",
-                            1 => "small-box bg-danger-off"
-                            );
-        }
-
-        return view('dashboard', compact('dataYear','dataWeek', 'dolar', 'date', 'buffet', 'percentage', 'colors'));
+        return $types;
     }
 
-    public function store($i = 0, $j = 1, $dataYear = array(), $dataWeek = array(), Request $request){
-        $dateToday     = date("d/m/y",strtotime($request->date."- 1 days"));
-        $dateYesterday = date("d/m/y",strtotime($request->date."- 2 days"));
+    private function get_types_data_forecast($date_start, $date)
+    {
+        $id    = XmlForecastReport::orderBy('date', 'desc')->value('id');
 
-        $reportToday     = XmlReport::where('date', $dateToday)->value('id');
-        $reportYesterday = XmlReport::where('date', $dateYesterday)->value('id');
+        $dats = XmlForecastDate::select('date')
+                                ->where('report_id', $id)
+                                ->where('date', '>=', $date_start)
+                                ->where('date', '<=', $date)
+                                ->get()->toArray();
 
-        $dolar = Dolar::where('report_id', $reportToday)->value('daily_rate');
+        $ROOMS_OOO = XmlForecastData::join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                    ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                    ->where('heading_id', 3)
+                                    ->where('xml_forecast_dates.report_id', $id)
+                                    ->where('xml_forecast_dates.date', '>=', $date_start)
+                                    ->where('xml_forecast_dates.date', '<=', $date)
+                                    ->orderBy('xml_headings.id')
+                                    ->value('dato');
 
-        if ($dolar == null){
-            $dolar = Dolar::orderByDesc('date')->value('daily_rate');
+        $hdgg = XmlForecastData::select('xml_headings.name as HDG')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_headings.name', 'like', '%_ROOMS%')
+                                ->where('xml_forecast_dates.date', '>=', $date_start)
+                                ->where('xml_forecast_dates.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->groupBy('xml_headings.id')
+                                ->get()->toArray();
+
+        $torr = XmlForecastData::select('xml_headings.name as HDG', 'dato as HAB' , 'xml_forecast_dates.date')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_headings.name', 'like', '%_ROOMS%')
+                                ->where('xml_forecast_dates.date', '>=', $date_start)
+                                ->where('xml_forecast_dates.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        $toar = XmlForecastData::select('dato as PAA')
+                                ->join('xml_headings', 'heading_id', '=', 'xml_headings.id')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', '>', 123)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_headings.name', 'like', '%_ADULTS%')
+                                ->where('xml_forecast_dates.date', '>=', $date_start)
+                                ->where('xml_forecast_dates.date', '<=', $date)
+                                ->orderBy('xml_headings.id')
+                                ->get()->toArray();
+
+        foreach ($hdgg as $key => $value) {
+            $pieces = explode("_", $value['HDG']);
+            $types[$key]['head'] = $value['HDG'];
+            $types[$key]['name'] = $pieces[0];
+            $types[$key]["descrip"] = $this->get_description_name($types[$key]['name']);
         }
 
-        $buffet = Buffet::select('*')->get();
+        foreach ($types as $order => $type) {
+            foreach ($dats as $key => $date) {
+                foreach ($torr as $raw => $value) {
+                    if ($type['head'] == $value['HDG'] && $date['date'] == $value['date']) {
+                        $types[$order]['rooms'][$key]    = $value['HAB'];
+                        $types[$order]['people'][$key]   = $toar[$raw]['PAA'];
+                        $types[$order]['rat'][$key]      = strval(round($types[$order]['people'][$key] / $value['HAB'], 2));
+                        $types[$order]["per"][$key]      = $value['HAB'] / $ROOMS_OOO * 100;
+                    }
+                }
+            }
+        }
 
-        while ($i <= 6) {
-            $dolarDate = date("d/m/y",strtotime($request->date."- ". $j. "days"));
-            $id        = XmlReport::where('date', $dolarDate)->value('id');
-            $dolarRate = Dolar::where('report_id', $id)->value('daily_rate');
-            $dataWeek['date'][$i]   = $this->orderDate($dolarDate, 2);
+        foreach ($types as $order => $type) {
+            $types[$order]['color'] = $this->get_color($order);
+            $types[$order]['lines'] = $this->get_color_line($order);
+            foreach ($dats as $key => $date) {
+                if (array_key_exists($key, $type['rooms']) == false) {
+                    $types[$order]['rooms'][$key] = null;
+                    $types[$order]['people'][$key] = null;
+                    $types[$order]['rat'][$key] = null;
+                    $types[$order]['per'][$key] = null;
+                }
+            }
+            ksort($types[$order]['rooms']);
+            ksort($types[$order]['people']);
+            ksort($types[$order]['rat']);
+            ksort($types[$order]['per']);
+        }
+        return $types;
+    }
 
-            if ($dolarRate != null){
-                $dataWeek['ADR'][$i]    = XmlData::where('report_id', $id)->where('heading_id', 122)->value('day') / $dolarRate;
-                $dataWeek['RevPAR'][$i] = XmlData::where('report_id', $id)->where('heading_id', 123)->value('day') / $dolarRate;
-            }else{
-                $dataWeek['ADR'][$i]    = XmlData::where('report_id', $id)->where('heading_id', 122)->value('day') / $dolar;
-                $dataWeek['RevPAR'][$i] = XmlData::where('report_id', $id)->where('heading_id', 123)->value('day') / $dolar;
+    private function get_yesterday_data($date)
+    {
+        $report      = XmlHistoryReport::where('date', date("Y-m-d", strtotime($date . " - 1 days")))->value('id');
+        $data["PDS"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 36)->value('day');
+        return $data;
+    }
+
+    private function get_today_data($date)
+    {
+        $report = XmlHistoryReport::where('date', $date)->value('id');
+
+        $data["TDD"] = $this->dolar($date);
+        $data["IDR"] = XmlHistoryReport::where('date', $date)->value('id');
+        $data["HAB"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 2)  ->value('day');
+        $data["PAX"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 16) ->value('day');
+        $data["PDS"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 36) ->value('day');
+        $data["PMS"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 36) ->value('month');
+        $data["PYS"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 36) ->value('year');
+        $data["ARR"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 37) ->value('day');
+        $data["DEP"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 45) ->value('day');
+        $data["HAR"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 119)->value('day');
+        $data["PDR"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 121)->value('day');
+        $data["ADB"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 122)->value('day');
+        $data["RVB"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 123)->value('day');
+        $data["ADR"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 122)->value('day') / $this->dolar($date);
+        $data["RVP"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 123)->value('day') / $this->dolar($date);
+
+        return $data;
+    }
+
+    private function get_week_data($date)
+    {
+        $date_start = date("Y-m-d", strtotime($date . " - 6 days"));
+
+        $drta = Dolar::select('daily_rate as DOLAR')
+                        ->where('date', '>=', date("Y-m-d", strtotime(date($date_start))))
+                        ->where('date', '<=', $date)
+                        ->orderBy('date', 'asc')
+                        ->get()->toArray();
+
+        $dats = XmlHistoryReport::select('date')
+                                ->where('date', '>=', $date_start)
+                                ->where('date', '<=', $date)
+                                ->get()->toArray();
+
+        $habh = XmlHistoryData::select('day as HAB')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 3)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $nrsh = XmlHistoryData::select('day as NRS')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 2)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $arrh = XmlHistoryData::select('day as ARR')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 37)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $deph = XmlHistoryData::select('day as DEP')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 45)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $paxa = XmlHistoryData::select('day as PAA')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 14)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $paxc = XmlHistoryData::select('day as PAC')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 15)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $ocuc = XmlHistoryData::select('day as OCC')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 36)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        foreach ($habh as $key => $value) {
+            $ALL[$key]['HAB'] = $nrsh[$key]['NRS'];
+            $ALL[$key]['PAA'] = $paxa[$key]['PAA'];
+            $ALL[$key]['PAC'] = $paxc[$key]['PAC'];
+            $ALL[$key]['PAX'] = $paxa[$key]['PAA'] + $paxc[$key]['PAC'];
+            $ALL[$key]['OCC'] = $ocuc[$key]['OCC'];
+            $ALL[$key]['ARR'] = $arrh[$key]['ARR'];
+            $ALL[$key]['DEP'] = $deph[$key]['DEP'];
+            $ALL[$key]['dates'] = $this->get_name_day(strtotime(date($dats[$key]['date'])));
+        }
+
+        $week['HAB'] = array_column($ALL, 'HAB');
+        $week['PAX'] = array_column($ALL, 'PAX');
+        $week['PAA'] = array_column($ALL, 'PAA');
+        $week['PAC'] = array_column($ALL, 'PAC');
+        $week['OCC'] = array_column($ALL, 'OCC');
+        $week['ARR'] = array_column($ALL, 'ARR');
+        $week['DEP'] = array_column($ALL, 'DEP');
+        $week['TOR'] = $this->get_types_data($date_start, $date);
+        $week['dates'] = array_column($ALL, 'dates');
+
+        return $week;
+    }
+
+    private function get_month_data($date, $i = 0)
+    {
+        $date_real  = date("Y-m-d",  strtotime(date($date) . "- 1 days")); //31-08-22
+        $date_start = date("Y-m-02", strtotime(date($date_real) . "+" . $i . "month"));//02-09-22
+        $date_end   = date("Y-m-01", strtotime(date($date_real) . "+". $i+1 ."month"));//01-10-22
+
+        $id_history = XmlHistoryReport::where('date', $date_end)->value('id');
+
+        if ($id_history) {
+
+            $history = $this->get_history($date_start, $date_end);
+
+            $all['name'] = $this->get_name_month(date("m", strtotime($date_start)));
+
+            $all['NRS'] = array_column($history, 'HAB');
+            $all['NPS'] = array_column($history, 'NPS');
+            $all['OCC'] = array_column($history, 'OCC');
+            $all['OCP'] = array_column($history, 'OCP');
+            $all['ARR'] = array_column($history, 'ARR');
+            $all['DEP'] = array_column($history, 'DEP');
+            $all['BARR'] = array_column($history, 'BARR');
+            $all['LARR'] = array_column($history, 'LARR');
+            $all['BDEP'] = array_column($history, 'BDEP');
+            $all['LDEP'] = array_column($history, 'LDEP');
+            $all['BOCC'] = array_column($history, 'BOCC');
+            $all['LOCC'] = array_column($history, 'LOCC');
+            $all['dates'] = array_column($history, 'dates');
+
+            $all['history']['DYS'] = count(array_column($history, 'HAB'));
+            $all['history']['NRS'] = array_sum(array_column($history, 'HAB'));
+            $all['history']['NPS'] = array_sum(array_column($history, 'NPS'));
+            $all['history']['OCC'] = array_sum(array_column($history, 'OCC')) / $all['history']['DYS'];
+            $all['history']['ARR'] = array_sum(array_column($history, 'ARR'));
+            $all['history']['DEP'] = array_sum(array_column($history, 'DEP'));
+
+            $torh = $this->get_types_data_history($date_start, $date_end);
+
+            foreach ($torh as $key => $value) {
+                $all['TOR'][$key]['name']    = $value['name'];
+                $all['TOR'][$key]['descrip'] = $value['descrip'];
+                $all['TOR'][$key]['color']   = $value['color'];
+                $all['TOR'][$key]['lines']   = $value['lines'];
+                $all['TOR'][$key]['rooms']   = $value['rooms'];
+                $all['TOR'][$key]['people']  = $value['people'];
+                $all['TOR'][$key]['rat']     = $value['rat'];
+                $all['TOR'][$key]['per']     = $value['per'];
+
+                $all['history']['TOR'][$key]['color']  = $value['color'];
+                $all['history']['TOR'][$key]['lines']  = $value['lines'];
+                $all['history']['TOR'][$key]['rooms']  = array_sum($torh[$key]['rooms']);
+                $all['history']['TOR'][$key]['people'] = array_sum($torh[$key]['people']);
+                $all['history']['TOR'][$key]['rat']    = array_sum($torh[$key]['rat']);
+                $all['history']['TOR'][$key]['per']    = array_sum($torh[$key]['per']) / $all['history']['DYS'];
             }
 
-            $dataWeek['Hab'][$i]        = XmlData::where('report_id', $id)->where('heading_id', 2) ->value('day');
-            $dataWeek['Pax'][$i]        = XmlData::where('report_id', $id)->where('heading_id', 16)->value('day');
-            $dataWeek['DEP'][$i]        = XmlData::where('report_id', $id)->where('heading_id', 95)->value('day');
-            $dataWeek['ARR'][$i]        = XmlData::where('report_id', $id)->where('heading_id', 93)->value('day');
-            $dataWeek['Per'][$i] = XmlData::where('report_id', $id)->where('heading_id', 36)->value('day');
+            $all['forecast']['DYS'] = 0;
 
-            $j++;
-            $i++; 
-        }
-
-        $date = date("d/m/y",strtotime($request->date));
-
-        $newDate  = date("d/m", strtotime($request->date ."- 1 days"));
-        $xmlYear = XmlReport::select('*')->where('date', 'LIKE', '%' . $newDate . '%')->orderByDesc('date')->get();
-
-        foreach ($xmlYear as $key => $value) {
-            $dataYear['id'][$key]         = $value['id'];
-            $dataYear['date'][$key]       = $this->orderDate($value['date'], 1);
-            $dolarRate = Dolar::where('report_id', $value['id'])->value('daily_rate');
-
-            if ($dolarRate != null){
-                $dataYear['ADR'][$key]    = XmlData::where('report_id', $value['id'])->where('heading_id', 122)->value('day') / $dolarRate;
-                $dataYear['RevPAR'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 123)->value('day') / $dolarRate;
-            }else{
-                $dataYear['ADR'][$key]    = XmlData::where('report_id', $value['id'])->where('heading_id', 122)->value('day') / $dolar;
-                $dataYear['RevPAR'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 123)->value('day') / $dolar;
-            }
-
-            $dataYear['Hab'][$key]        = XmlData::where('report_id', $value['id'])->where('heading_id', 2)  ->value('day');
-            $dataYear['Pax'][$key]        = XmlData::where('report_id', $value['id'])->where('heading_id', 16) ->value('day');
-            $dataYear['DEP'][$key]        = XmlData::where('report_id', $value['id'])->where('heading_id', 95) ->value('day');
-            $dataYear['ARR'][$key]        = XmlData::where('report_id', $value['id'])->where('heading_id', 93) ->value('day');
-            $dataYear['Per']['Dia'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 36) ->value('day');
-            $dataYear['Per']['Mes'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 36) ->value('month');
-            $dataYear['Per']['Año'][$key] = XmlData::where('report_id', $value['id'])->where('heading_id', 36) ->value('year');
-        }
-
-        $percentage = array(
-                            'ayer' => XmlData::where('report_id', $reportYesterday)->where('heading_id', 36)->value('day'),
-                            'dia'  => XmlData::where('report_id', $reportToday)    ->where('heading_id', 36)->value('day'),
-                            'mes'  => XmlData::where('report_id', $reportToday)    ->where('heading_id', 36)->value('month'),
-                            'año'  => XmlData::where('report_id', $reportToday)    ->where('heading_id', 36)->value('year')
-                            );
-
-        if ($percentage['dia']>= 50){
-            $colors = array(
-                            0 => "small-box bg-warning",
-                            1 => "small-box bg-danger"
-                            );
+            $all['limit'] = count(array_column($history, 'OCC'));
         }else{
-            $colors = array(
-                            0 => "small-box bg-warning-off",
-                            1 => "small-box bg-danger-off"
-                            );
+            $date_today = date("Y-m-d");
+            $date_starf = date("Y-m-01", strtotime($date_start));
+            $date_end_f = date("Y-m-t",  strtotime($date_start));
+
+            $id_history = XmlHistoryReport::where('date', $date_start)->value('id');
+
+            if ($id_history) {
+                $history = $this->get_history($date_start, $date_end);
+
+                $forecast = $this->get_forecast($date_today, $date_end_f);
+
+                $result = array_merge($history, $forecast);
+
+                $all['name'] = $this->get_name_month(date("m", strtotime(date($date_real)."+" . $i . "month")));
+
+                $all['NRS'] = array_column($result, 'HAB');
+                $all['NPS'] = array_column($result, 'NPS');
+                $all['OCC'] = array_column($result, 'OCC');
+                $all['ARR'] = array_column($result, 'ARR');
+                $all['DEP'] = array_column($result, 'DEP');
+                $all['BARR'] = array_column($result, 'BARR');
+                $all['LARR'] = array_column($result, 'LARR');
+                $all['BDEP'] = array_column($result, 'BDEP');
+                $all['LDEP'] = array_column($result, 'LDEP');
+                $all['BOCC'] = array_column($result, 'BOCC');
+                $all['LOCC'] = array_column($result, 'LOCC');
+                $all['dates'] = array_column($result, 'dates');
+
+                $all['history']['DYS'] = count(array_column($history, 'HAB'));
+                $all['history']['NRS'] = array_sum(array_column($history, 'HAB'));
+                $all['history']['NPS'] = array_sum(array_column($history, 'NPS'));
+                $all['history']['OCC'] = array_sum(array_column($history, 'OCC')) / $all['history']['DYS'];
+                $all['history']['ARR'] = array_sum(array_column($history, 'ARR'));
+                $all['history']['DEP'] = array_sum(array_column($history, 'DEP'));
+
+                $all['forecast']['DYS'] = count(array_column($forecast, 'HAB'));
+                $all['forecast']['NRS'] = array_sum(array_column($forecast, 'HAB'));
+                $all['forecast']['NPS'] = array_sum(array_column($forecast, 'NPS'));
+                $all['forecast']['OCC'] = array_sum(array_column($forecast, 'OCC')) / $all['forecast']['DYS'];
+                $all['forecast']['ARR'] = array_sum(array_column($forecast, 'ARR'));
+                $all['forecast']['DEP'] = array_sum(array_column($forecast, 'DEP'));
+
+                $all['total']['DYS'] = $all['history']['DYS'] + $all['forecast']['DYS'];
+                $all['total']['NRS'] = $all['history']['NRS'] + $all['forecast']['NRS'];
+                $all['total']['NPS'] = $all['history']['NPS'] + $all['forecast']['NPS'];
+                $all['total']['OCC'] = ($all['history']['OCC'] + $all['forecast']['OCC']) / 2;
+                $all['total']['ARR'] = $all['history']['ARR'] + $all['forecast']['ARR'];
+                $all['total']['DEP'] = $all['history']['DEP'] + $all['forecast']['DEP'];
+
+                $torh = $this->get_types_data_history($date_start, $date_end);
+                $torf = $this->get_types_data_forecast($date_starf, $date_end_f);
+
+                foreach ($torf as $key => $value) {
+                    if (array_key_exists($key, $torh) == false) {
+                        $torh[$key]['name']    = $value['name'];
+                        $torh[$key]['descrip'] = $value['descrip'];
+                        $torh[$key]['color']   = $value['color'];
+                        $torh[$key]['lines']   = $value['lines'];
+                        foreach ($torh[0]['rooms'] as $key2 => $value2) {
+                            $torh[$key]['rooms'][$key2]   = null;
+                            $torh[$key]['people'][$key2]  = null;
+                            $torh[$key]['rat'][$key2]     = null;
+                            $torh[$key]['per'][$key2]     = null;
+                        }
+                    }
+                }
+
+                foreach ($torh as $key => $value) {
+                    if (array_key_exists($key, $torf) == false) {
+                        $torf[$key]['name']    = $value['name'];
+                        $torf[$key]['descrip'] = $value['descrip'];
+                        $torf[$key]['color']   = $value['color'];
+                        $torh[$key]['lines']   = $value['lines'];
+                        foreach ($torf[0]['rooms'] as $key2 => $value2) {
+                            $torf[$key]['rooms'][$key2]   = null;
+                            $torf[$key]['people'][$key2]  = null;
+                            $torf[$key]['rat'][$key2]     = null;
+                            $torf[$key]['per'][$key2]     = null;
+                        }
+                    }
+                }
+
+                foreach ($torh as $key => $value) {
+                    $all['TOR'][$key]['name']    = $value['name'];
+                    $all['TOR'][$key]['descrip'] = $value['descrip'];
+                    $all['TOR'][$key]['color']   = $value['color'];
+                    $all['TOR'][$key]['lines']   = $value['lines'];
+                    $all['TOR'][$key]['rooms']   = array_merge($value['rooms'], $torf[$key]['rooms']);
+                    $all['TOR'][$key]['people']  = array_merge($value['people'], $torf[$key]['people']);
+                    $all['TOR'][$key]['rat']     = array_merge($value['rat'], $torf[$key]['rat']);
+                    $all['TOR'][$key]['per']     = array_merge($value['per'], $torf[$key]['per']);
+
+                    $all['history']['TOR'][$key]['color']  = $value['color'];
+                    $all['history']['TOR'][$key]['lines']  = $value['lines'];
+                    $all['history']['TOR'][$key]['rooms']  = array_sum($torh[$key]['rooms']);
+                    $all['history']['TOR'][$key]['people'] = array_sum($torh[$key]['people']);
+                    $all['history']['TOR'][$key]['rat']    = array_sum($torh[$key]['rat']);
+                    $all['history']['TOR'][$key]['per']    = array_sum($torh[$key]['per']) / $all['history']['DYS'];
+
+                    $all['forecast']['TOR'][$key]['color']  = $value['color'];
+                    $all['forecast']['TOR'][$key]['lines']  = $value['lines'];
+                    $all['forecast']['TOR'][$key]['rooms']  = array_sum($torf[$key]['rooms']);
+                    $all['forecast']['TOR'][$key]['people'] = array_sum($torf[$key]['people']);
+                    $all['forecast']['TOR'][$key]['rat']    = array_sum($torf[$key]['rat']);
+                    $all['forecast']['TOR'][$key]['per']    = array_sum($torf[$key]['per']) / $all['forecast']['DYS'];
+
+                    $all['total']['TOR'][$key]['color']  = $value['color'];
+                    $all['total']['TOR'][$key]['lines']  = $value['lines'];
+                    $all['total']['TOR'][$key]['rooms']  = $all['history']['TOR'][$key]['rooms']  + $all['forecast']['TOR'][$key]['rooms'];
+                    $all['total']['TOR'][$key]['people'] = $all['history']['TOR'][$key]['people'] + $all['forecast']['TOR'][$key]['people'];
+                    $all['total']['TOR'][$key]['rat']    = $all['history']['TOR'][$key]['rat']    + $all['forecast']['TOR'][$key]['rat'];
+                    $all['total']['TOR'][$key]['per']    = ($all['history']['TOR'][$key]['per']   + $all['forecast']['TOR'][$key]['per']) / 2;
+                }
+
+                $all['limit'] = count(array_column($history, 'OCC'));
+            }else{
+                $forecast    = $this->get_forecast($date_starf, $date_end_f);
+
+                $all['name'] = $this->get_name_month(date("m", strtotime($date_starf)));
+
+                $all['NRS'] = array_column($forecast, 'HAB');
+                $all['NPS'] = array_column($forecast, 'NPS');
+                $all['OCC'] = array_column($forecast, 'OCC');
+                $all['ARR'] = array_column($forecast, 'ARR');
+                $all['DEP'] = array_column($forecast, 'DEP');
+                $all['BARR'] = array_column($forecast, 'BARR');
+                $all['LARR'] = array_column($forecast, 'LARR');
+                $all['BDEP'] = array_column($forecast, 'BDEP');
+                $all['LDEP'] = array_column($forecast, 'LDEP');
+                $all['BOCC'] = array_column($forecast, 'BOCC');
+                $all['LOCC'] = array_column($forecast, 'LOCC');
+                $all['dates'] = array_column($forecast, 'dates');
+
+                $all['forecast']['DYS'] = count(array_column($forecast, 'HAB'));
+                $all['forecast']['NRS'] = array_sum(array_column($forecast, 'HAB'));
+                $all['forecast']['NPS'] = array_sum(array_column($forecast, 'NPS'));
+                $all['forecast']['OCC'] = array_sum(array_column($forecast, 'OCC')) / $all['forecast']['DYS'];
+                $all['forecast']['ARR'] = array_sum(array_column($forecast, 'ARR'));
+                $all['forecast']['DEP'] = array_sum(array_column($forecast, 'DEP'));
+
+                $torf = $this->get_types_data_forecast($date_starf, $date_end_f);
+
+                foreach ($torf as $key => $value) {
+                    $all['TOR'][$key]['name']    = $value['name'];
+                    $all['TOR'][$key]['descrip'] = $value['descrip'];
+                    $all['TOR'][$key]['color']   = $value['color'];
+                    $all['TOR'][$key]['lines']   = $value['lines'];
+                    $all['TOR'][$key]['rooms']   = $value['rooms'];
+                    $all['TOR'][$key]['people']  = $value['people'];
+                    $all['TOR'][$key]['rat']     = $value['rat'];
+                    $all['TOR'][$key]['per']     = $value['per'];
+
+                    $all['forecast']['TOR'][$key]['color']  = $value['color'];
+                    $all['forecast']['TOR'][$key]['lines']  = $value['lines'];
+                    $all['forecast']['TOR'][$key]['rooms']  = array_sum($torf[$key]['rooms']);
+                    $all['forecast']['TOR'][$key]['people'] = array_sum($torf[$key]['people']);
+                    $all['forecast']['TOR'][$key]['rat']    = array_sum($torf[$key]['rat']);
+                    $all['forecast']['TOR'][$key]['per']    = array_sum($torf[$key]['per']) / $all['forecast']['DYS'];
+                }
+
+                $all['limit'] = count(array_column($forecast, 'OCC'));
+
+                $all['history']['DYS'] = 0;
+            }
+        }
+        return $all;
+    }
+
+    private function get_history($date_start, $date_today, $avgs = 0){
+        $dats = XmlHistoryReport::select('date')
+                                ->where('date', '>=', $date_start)
+                                ->where('date', '<=', $date_today)
+                                ->get()->toArray();
+
+        $habh = XmlHistoryData::select('day as HAB')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 3)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date_today)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $nrsh = XmlHistoryData::select('day as NRS')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 2)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date_today)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $paxh = XmlHistoryData::select('day as NPS')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 16)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date_today)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $occh = XmlHistoryData::select('day as OCC')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 36)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date_today)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $arrh = XmlHistoryData::select('day as ARR')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 37)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date_today)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        $deph = XmlHistoryData::select('day as DEP')
+                                ->join('xml_history_reports', 'report_id', '=', 'xml_history_reports.id')
+                                ->where('heading_id', 45)
+                                ->where('xml_history_reports.date', '>=', $date_start)
+                                ->where('xml_history_reports.date', '<=', $date_today)
+                                ->orderBy('xml_history_reports.date')
+                                ->get()->toArray();
+
+        foreach ($habh as $key => $value) {
+            $ALL[$key]['HAB'] = $nrsh[$key]['NRS'];
+            $ALL[$key]['NPS'] = $paxh[$key]['NPS'];
+            $ALL[$key]['OCC'] = $occh[$key]['OCC'];
+            $ALL[$key]['ARR'] = $arrh[$key]['ARR'];
+            $ALL[$key]['DEP'] = $deph[$key]['DEP'];
+
+            $ALL[$key]["BARR"] = 'rgba(27, 188, 155, 0.5)';
+            $ALL[$key]["LARR"] = 'rgba(27, 188, 155, 1)';
+            $ALL[$key]["BDEP"] = 'rgba(45, 62, 80, 0.5)';
+            $ALL[$key]["LDEP"] = 'rgba(45, 62, 80, 1)';
+            $ALL[$key]["BOCC"] = 'rgba(0, 123, 255, 0.5)';
+            $ALL[$key]["LOCC"] = 'rgba(0, 123, 255, 1)';
+
+            $ALL[$key]['dates'] = date("d-M-y", strtotime(date($dats[$key]['date']) . "- 1 days"));
         }
 
-        return view('dashboard', compact('dataYear','dataWeek', 'dolar', 'date', 'buffet', 'percentage', 'colors'));
+        return $ALL;
+    }
+
+    private function get_forecast($date_today, $date_end_f, $avgs = 0){
+        $id   = XmlForecastReport::orderBy('date', 'desc')->value('id');
+
+        $dats = XmlForecastDate::select('date')
+                                ->where('report_id', $id)
+                                ->where('date', '>=', $date_today)
+                                ->where('date', '<=', $date_end_f)
+                                ->get()->toArray();
+
+        $habh = XmlForecastData::select('dato as HAB')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', 3)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_forecast_dates.date', '>=', $date_today)
+                                ->where('xml_forecast_dates.date', '<=', $date_end_f)
+                                ->orderBy('xml_forecast_dates.date')
+                                ->get()->toArray();
+
+        $nrsh = XmlForecastData::select('dato as NRS')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', 2)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_forecast_dates.date', '>=', $date_today)
+                                ->where('xml_forecast_dates.date', '<=', $date_end_f)
+                                ->orderBy('xml_forecast_dates.date')
+                                ->get()->toArray();
+
+        $paxh = XmlForecastData::select('dato as NPS')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', 16)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_forecast_dates.date', '>=', $date_today)
+                                ->where('xml_forecast_dates.date', '<=', $date_end_f)
+                                ->orderBy('xml_forecast_dates.date')
+                                ->get()->toArray();
+
+        $occh = XmlForecastData::select('dato as OCC')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', 36)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_forecast_dates.date', '>=', $date_today)
+                                ->where('xml_forecast_dates.date', '<=', $date_end_f)
+                                ->orderBy('xml_forecast_dates.date')
+                                ->get()->toArray();
+
+        $arrh = XmlForecastData::select('dato as ARR')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', 37)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_forecast_dates.date', '>=', $date_today)
+                                ->where('xml_forecast_dates.date', '<=', $date_end_f)
+                                ->orderBy('xml_forecast_dates.date')
+                                ->get()->toArray();
+
+        $deph = XmlForecastData::select('dato as DEP')
+                                ->join('xml_forecast_dates', 'date_id', '=', 'xml_forecast_dates.id')
+                                ->where('heading_id', 45)
+                                ->where('xml_forecast_dates.report_id', $id)
+                                ->where('xml_forecast_dates.date', '>=', $date_today)
+                                ->where('xml_forecast_dates.date', '<=', $date_end_f)
+                                ->orderBy('xml_forecast_dates.date')
+                                ->get()->toArray();
+
+        foreach ($habh as $key => $value) {
+            $ALL[$key]['HAB'] = $nrsh[$key]['NRS'];
+            $ALL[$key]['NPS'] = $paxh[$key]['NPS'];
+            $ALL[$key]['OCC'] = $occh[$key]['OCC'];
+            $ALL[$key]['ARR'] = $arrh[$key]['ARR'];
+            $ALL[$key]['DEP'] = $deph[$key]['DEP'];
+
+            $ALL[$key]["BARR"] = 'rgba(27, 188, 155, 0.4)';
+            $ALL[$key]["LARR"] = 'rgba(27, 188, 155, 0.5)';
+            $ALL[$key]["BDEP"] = 'rgba(45, 62, 80, 0.4)';
+            $ALL[$key]["LDEP"] = 'rgba(45, 62, 80, 0.5)';
+            $ALL[$key]["BOCC"] = 'rgba(0, 123, 255, 0.4)';
+            $ALL[$key]["LOCC"] = 'rgba(0, 123, 255, 0.5)';
+
+            $ALL[$key]['dates'] = date("d-M-y", strtotime(date($dats[$key]['date'])));
+        }
+
+        return $ALL;
+    }
+
+    private function get_year_data($date)
+    {
+        $date  = date("m-d", strtotime($date));
+        $dates = XmlHistoryReport::where('date', 'LIKE', '%' . $date . '%')->orderBy('date', 'asc')->get();
+
+        foreach ($dates as $key => $value) {
+            $dolar = $this->dolar($value['date']);
+            $data["date"][$key] = date("Y",strtotime($value['date'] . "+ 1 days"));
+            $data["HAB"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 2)  ->value('day');
+            $data["PAX"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 16) ->value('day');
+            $data["DEP"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 95) ->value('day');
+            $data["ARR"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 93) ->value('day');
+            $data["PDS"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 36) ->value('day');
+            $data["PMS"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 36) ->value('month');
+            $data["PYS"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 36) ->value('year');
+            $data["ADR"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 122)->value('day') / $dolar;
+            $data["RVP"][$key]  = XmlHistoryData::where('report_id', $value['id'])->where('heading_id', 123)->value('day') / $dolar;
+        }
+        return $data;
+    }
+
+    public function index(){
+        $date = date("Y-m-d");
+        $data = $this->allData($date);
+        $number = date("d/m/Y", strtotime($date));
+        $start = XmlHistoryReport::orderBy('date', 'DESC')->value('date');
+        $end   = XmlHistoryReport::orderBy('date', 'ASC') ->value('date');
+        $date = date("dmy",strtotime(date("d-m-Y")."- 1 days"));
+        return view('dashboard', compact('number', 'start', 'end','date','data'));
+    }
+
+    public function store(Request $request){
+        $date = $request->date;
+        $data = $this->allData($date);
+        $number = date("d/m/Y", strtotime($date));
+        $start = XmlHistoryReport::orderBy('date', 'DESC')->value('date');
+        $end   = XmlHistoryReport::orderBy('date', 'ASC') ->value('date');
+        return view('dashboard', compact('number', 'start', 'end','date','data'));
     }
 }
