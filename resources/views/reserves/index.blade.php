@@ -67,12 +67,12 @@
                         Actividad
                     </h5>
                     <div class="card-tools">
-                        <ul class="nav nav-pills ml-auto">
+                        <ul class="nav nav-pills ml-auto" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link nav-sm" href="#christmas-sales" style="padding: 0.25rem 0.75em" data-toggle="tab">Navidad</a>
+                                <button class="nav-link mr-2" style="padding: 0.25rem 0.75em" id="christmas-sales-tab" data-bs-toggle="tab" data-bs-target="#christmas-sales" type="button" role="tab" aria-controls="christmas-sales" aria-selected="true">Navidad</button>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mr-2 active" href="#new-year-sales" style="padding: 0.25rem 0.75em" data-toggle="tab">Año Nuevo</a>
+                                <button class="nav-link mr-2 active" style="padding: 0.25rem 0.75em" id="new-year-sales-tab" data-bs-toggle="tab" data-bs-target="#new-year-sales" type="button" role="tab" aria-controls="new-year-sales" aria-selected="true">Año Nuevo</button>
                             </li>
                             <li class="nav-item">
                                 <button type="button" class="btn bg-primary btn-sm" data-card-widget="collapse">
@@ -80,6 +80,7 @@
                                 </button>
                             </li>
                         </ul>
+                        
                     </div>
                 </div>
                 <div class="card-body">
@@ -98,34 +99,15 @@
                                     <p class="text-center">
                                         <strong>Ocupación</strong>
                                     </p>
+                                    @foreach ($data["christmas"]["groups"] as $dato)
                                     <div class="progress-group">
-                                        <span class="progress-text">Zona A ({{ number_format($sales["christmas"]["groups"]["A"]/108*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["christmas"]["groups"]["A"] }}</b>/108</span>
+                                        <span class="progress-text">Zona {{ $dato["area"] }} ({{ number_format($dato["count"]/$dato["volume"]*100, 0) }}%)</span>
+                                        <span class="float-right"><b>{{ $dato["count"] }}</b>/{{ $dato["volume"] }}</span>
                                         <div class="progress progress-sm">
-                                            <div class="progress-bar bg-primary" style="width: {{ number_format($sales["christmas"]["groups"]["A"]/108*100, 0) }}%"></div>
+                                            <div class="progress-bar bg-primary" style="width: {{ number_format($dato["count"]/$dato["volume"]*100, 0) }}%"></div>
                                         </div>
                                     </div>
-                                    <div class="progress-group">
-                                        <span class="progress-text">Zona B ({{ number_format(($sales["christmas"]["groups"]["B"]+2)/81*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["christmas"]["groups"]["B"]+2 }}</b>/81</span>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-danger" style="width: {{ number_format(($sales["christmas"]["groups"]["B"]+2)/81*100, 0) }}%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="progress-group">
-                                        <span class="progress-text">Zona C ({{ number_format($sales["christmas"]["groups"]["C"]/81*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["christmas"]["groups"]["C"] }}</b>/81</span>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-success" style="width: {{ number_format($sales["christmas"]["groups"]["C"]/81*100, 0) }}%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="progress-group">
-                                        <span class="progress-text">Zona D ({{ number_format($sales["christmas"]["groups"]["D"]/27*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["christmas"]["groups"]["D"] }}</b>/27</span>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-warning" style="width: {{ number_format($sales["christmas"]["groups"]["D"]/27*100, 0) }}%"></div>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                     <div class="text-center pt-2">
                                         <a href="{{ route('reserves.dinners.christmas') }}" class="btn btn-sm btn-info">
                                             Ver Detalles
@@ -176,41 +158,15 @@
                                     <p class="text-center">
                                         <strong>Ocupación</strong>
                                     </p>
-                                    <div class="progress-group">
-                                        <span class="progress-text">Zona A ({{ number_format($sales["NewYear"]["groups"]["A"]/236*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["NewYear"]["groups"]["A"] }}</b>/236</span>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-primary" style="width: {{ number_format($sales["NewYear"]["groups"]["A"]/236*100, 0) }}%"></div>
+                                    @foreach ($data["new_year"]["groups"] as $dato)
+                                        <div class="progress-group">
+                                            <span class="progress-text">Zona {{ $dato["area"] }} ({{ number_format($dato["count"]/$dato["volume"]*100, 0) }}%)</span>
+                                            <span class="float-right"><b>{{ $dato["count"] }}</b>/{{ $dato["volume"] }}</span>
+                                            <div class="progress progress-sm">
+                                                <div class="progress-bar bg-primary" style="width: {{ number_format($dato["count"]/$dato["volume"]*100, 0) }}%"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="progress-group">
-                                        <span class="progress-text">Zona B ({{ number_format($sales["NewYear"]["groups"]["B"]/80*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["NewYear"]["groups"]["B"] }}</b>/80</span>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-danger" style="width: {{ number_format($sales["NewYear"]["groups"]["B"]/80*100, 0) }}%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="progress-group">
-                                        <span class="progress-text">Zona C ({{ number_format($sales["NewYear"]["groups"]["C"]/70*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["NewYear"]["groups"]["C"] }}</b>/70</span>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-success" style="width: {{ number_format($sales["NewYear"]["groups"]["C"]/70*100, 0) }}%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="progress-group">
-                                        <span class="progress-text">Zona D ({{ number_format($sales["NewYear"]["groups"]["D"]/102*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["NewYear"]["groups"]["D"] }}</b>/102</span>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-warning" style="width: {{ number_format($sales["NewYear"]["groups"]["D"]/102*100, 0) }}%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="progress-group">
-                                        <span class="progress-text">Zona E ({{ number_format($sales["NewYear"]["groups"]["E"]/60*100, 0) }}%)</span>
-                                        <span class="float-right"><b>{{ $sales["NewYear"]["groups"]["E"] }}</b>/60</span>
-                                        <div class="progress progress-sm">
-                                            <div class="progress-bar bg-info" style="width: {{ number_format($sales["NewYear"]["groups"]["E"]/60*100, 0) }}%"></div>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                     <div class="text-center pt-2">
                                         <a href="{{ route('reserves.dinners.newYear') }}" class="btn btn-sm btn-info">
                                             Ver Detalles
@@ -264,10 +220,10 @@
                     <div class="card-tools">
                         <ul class="nav nav-pills ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link nav-sm" href="#christmas-earnings" style="padding: 0.25rem 0.75em" data-toggle="tab">Navidad</a>
+                                <button class="nav-link nav-sm" style="padding: 0.25rem 0.75em" id="#christmas-earnings" data-bs-toggle="tab" data-bs-target="#christmas-earnings" type="button" role="tab">Navidad</button>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mr-2 active" href="#new-year-earnings" style="padding: 0.25rem 0.75em" data-toggle="tab">Año Nuevo</a>
+                                <button class="nav-link mr-2 active" style="padding: 0.25rem 0.75em" id="#new-year-earnings" data-bs-toggle="tab" data-bs-target="#new-year-earnings" type="button" role="tab">Año Nuevo</button>
                             </li>
                             <li class="nav-item">
                                 <button type="button" class="btn bg-primary btn-sm" data-card-widget="collapse">
@@ -352,22 +308,22 @@
                                         <span class="info-box-icon"><i class="fas fa-file-invoice-dollar"></i></span>
                                         <div class="info-box-content">
                                             <span class="info-box-text">Costo Fijo</span>
-                                            <span class="info-box-number">{{ number_format($point["NewYear"]["initial"], 2, ',', '.') }}$</span>
+                                            <span class="info-box-number">{{ number_format($point["new_year"]["initial"], 2, ',', '.') }}$</span>
                                         </div>
                                     </div>
-                                    @if (end($point["NewYear"]["meta"]) <= 0)
+                                    @if (end($point["new_year"]["meta"]) <= 0)
                                         <div class="info-box mb-3 bg-danger">
                                             <span class="info-box-icon"><i class="fas fa-level-down-alt"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Perdidas</span>
-                                                <span class="info-box-number">{{ number_format(end($point["NewYear"]["meta"]), 2, ',', '.') }}$</span>
+                                                <span class="info-box-number">{{ number_format(end($point["new_year"]["meta"]), 2, ',', '.') }}$</span>
                                             </div>
                                         </div>
                                         <div class="info-box mb-3 bg-danger">
                                             <span class="info-box-icon"><i class="fas fa-percent"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Porcentaje</span>
-                                                <span class="info-box-number">{{ number_format(end($point["NewYear"]["perc"]), 2, ',', '.') }}%</span>
+                                                <span class="info-box-number">{{ number_format(end($point["new_year"]["perc"]), 2, ',', '.') }}%</span>
                                             </div>
                                         </div>
                                     @else
@@ -375,14 +331,14 @@
                                             <span class="info-box-icon"><i class="fas fa-level-up-alt"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Ganancias</span>
-                                                <span class="info-box-number">{{ number_format(end($point["NewYear"]["meta"]), 2, ',', '.') }}$</span>
+                                                <span class="info-box-number">{{ number_format(end($point["new_year"]["meta"]), 2, ',', '.') }}$</span>
                                             </div>
                                         </div>
                                         <div class="info-box mb-3 bg-success">
                                             <span class="info-box-icon"><i class="fas fa-percent"></i></span>
                                             <div class="info-box-content">
                                                 <span class="info-box-text">Porcentaje</span>
-                                                <span class="info-box-number">{{ number_format(end($point["NewYear"]["perc"]), 2, ',', '.') }}%</span>
+                                                <span class="info-box-number">{{ number_format(end($point["new_year"]["perc"]), 2, ',', '.') }}%</span>
                                             </div>
                                         </div>
                                     @endif
@@ -406,15 +362,15 @@
                     <div class="card-tools">
                         <ul class="nav nav-pills ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link nav-sm" href="#price-christmas" style="padding: 0.25rem 0.75em" data-toggle="tab">Navidad</a>
+                                <button class="nav-link nav-sm" id="#price-christmas" style="padding: 0.25rem 0.75em" data-bs-toggle="tab" data-bs-target="#price-christmas">Navidad</button>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mr-2 active" href="#price-new-year" style="padding: 0.25rem 0.75em" data-toggle="tab">Año Nuevo</a>
+                                <button class="nav-link mr-2 active" id="#price-new-year" style="padding: 0.25rem 0.75em" data-bs-toggle="tab" data-bs-target="#price-new-year">Año Nuevo</a>
                             </li>
                             <li class="nav-item">
                                 <button type="button" class="btn bg-primary btn-sm" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
-                                </button>                        
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -444,7 +400,7 @@
                             <li class="nav-item">
                                 <button type="button" class="btn bg-primary btn-sm" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
-                                </button>                        
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -467,15 +423,15 @@
                     <div class="card-tools">
                         <ul class="nav nav-pills ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link nav-sm" href="#people-christmas" style="padding: 0.25rem 0.75em" data-toggle="tab">Navidad</a>
+                                <button class="nav-link nav-sm" id="#people-christmas" style="padding: 0.25rem 0.75em" data-bs-toggle="tab" data-bs-target="#people-christmas">Navidad</button>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link mr-2 active" href="#people-new-year" style="padding: 0.25rem 0.75em" data-toggle="tab">Año Nuevo</a>
+                                <button class="nav-link mr-2 active" id="#people-new-year" style="padding: 0.25rem 0.75em" data-bs-toggle="tab" data-bs-target="#people-new-year">Año Nuevo</button>
                             </li>
                             <li class="nav-item">
                                 <button type="button" class="btn bg-primary btn-sm" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
-                                </button>                        
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -504,7 +460,7 @@
 <script type="text/javascript" src="https://www.chartjs.org/samples/2.9.4/utils.js"></script>
 
     <script>
-        const sales = {!! json_encode($sales) !!};
+        const sales = {!! json_encode($data) !!};
         const point = {!! json_encode($point) !!};
 
         function financial(x) {
@@ -624,10 +580,10 @@
         var newYearEarningsChart = new Chart(document.getElementById('new-year-earnings-chart-canvas').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: point["NewYear"]["date"],
+                labels: point["new_year"]["date"],
                 datasets: [{
                     label: 'Ventas',
-                    data: point["NewYear"]["data"],
+                    data: point["new_year"]["data"],
                     backgroundColor: 'rgba(17, 182, 212, 0.5)',
                     borderColor : 'rgba(17, 182, 212, 1)',
                     type: 'line',
@@ -635,7 +591,7 @@
                 },
                 {
                     label: '',
-                    data: point["NewYear"]["meta"],
+                    data: point["new_year"]["meta"],
                     order: 1
                 }]
             },
@@ -774,16 +730,16 @@
         var newYearSalesChart = new Chart(document.getElementById('new-year-sales-chart-canvas').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: sales["NewYear"]["sales"]["labels"],
+                labels: sales["new_year"]["sales"]["labels"],
                 datasets: [{
                     label: 'Adultos',
-                    data: sales["NewYear"]["sales"]["adults"],
+                    data: sales["new_year"]["sales"]["adults"],
                     backgroundColor: 'rgba(52, 58, 64, 0.5)',
                     borderColor: 'rgba(52, 58, 64, 1)',
                     order: 1
                     },{
                     label: 'Niños',
-                    data: sales["NewYear"]["sales"]["childrem"],
+                    data: sales["new_year"]["sales"]["childrem"],
                     backgroundColor: 'rgba(202, 158, 22, 0.5)',
                     borderColor: 'rgba(202, 158, 22, 1)',
                     order: 1
@@ -791,7 +747,7 @@
                     label: 'Venta',
                     backgroundColor: 'rgba(60, 141, 188, 0.5)',
                     borderColor: 'rgba(60, 141, 188, 1)',
-                    data: sales["NewYear"]["sales"]["data"],
+                    data: sales["new_year"]["sales"]["data"],
                     type: 'line',
                     order: 0
                 }]
@@ -859,7 +815,7 @@
                     label: 'Vendidas',
                     backgroundColor: ['rgba(200, 21, 21, 1)', 'rgba(52, 58, 64, 1)'],
                     borderColor: ['rgba(255, 255, 255, 1)', 'rgba(255, 255, 255, 1)'],
-                    data: [sales["christmas"]["quantity"], sales["NewYear"]["quantity"]]
+                    data: [sales["christmas"]["quantity"], sales["new_year"]["quantity"]]
                 }]
             },
             options: {
@@ -924,12 +880,12 @@
                     label: 'Adultos',
                     backgroundColor: 'rgba(52, 58, 64, 0.6)',
                     borderColor: 'rgba(52, 58, 64, 1)',
-                    data: [sales["NewYear"]["adults"]]
+                    data: [sales["new_year"]["adults"]]
                 },{
                     label: 'Niños',
                     backgroundColor: 'rgba(202, 158, 22, 0.6)',
                     borderColor: 'rgba(202, 158, 22, 1)',
-                    data: [sales["NewYear"]["childrem"]]
+                    data: [sales["new_year"]["childrem"]]
                 }]
             },
             options: {
@@ -973,13 +929,7 @@
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)'
                     ],
-                    data: [
-                        sales["christmas"]["prices"]["180"],
-                        sales["christmas"]["prices"]["150"],
-                        sales["christmas"]["prices"]["100"],
-                        sales["christmas"]["prices"]["60"],
-                        sales["christmas"]["prices"]["40"]
-                    ]
+                    data: sales["christmas"]["prices"],
                 }]
             },
             options: {
@@ -1032,11 +982,11 @@
                         'rgba(255, 159, 64, 1)'
                     ],
                     data: [
-                        sales["NewYear"]["prices"]["250"],
-                        sales["NewYear"]["prices"]["200"],
-                        sales["NewYear"]["prices"]["150"],
-                        sales["NewYear"]["prices"]["100"],
-                        sales["NewYear"]["prices"]["75"]]
+                        sales["new_year"]["prices"]["250"],
+                        sales["new_year"]["prices"]["200"],
+                        sales["new_year"]["prices"]["150"],
+                        sales["new_year"]["prices"]["100"],
+                        sales["new_year"]["prices"]["75"]]
                 }]
             },
             options: {

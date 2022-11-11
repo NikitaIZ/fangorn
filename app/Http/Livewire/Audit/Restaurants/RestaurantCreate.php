@@ -2,8 +2,9 @@
 
 namespace App\Http\Livewire\Audit\Restaurants;
 
-use App\Models\Audit\Restaurants\Restaurant;
 use Livewire\Component;
+
+use App\Models\Audit\Restaurants\Restaurant;
 
 class RestaurantCreate extends Component
 {

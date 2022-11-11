@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Http\Livewire\Audit;
+namespace App\Http\Livewire\Permissions;
 
 use Throwable;
-
-use App\Models\Audit\Buffet;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 
 use Illuminate\Support\Facades\Log;
 
-class BuffetIndex extends Component
+use Spatie\Permission\Models\Permission;
+
+class PermissionIndex extends Component
 {
     use WithPagination;
 
-    public $buffet;
+    public $permission;
 
     public $search      = '';
-    public $cant        = '10';
+    public $cant        = '25';
     public $sort        = 'id';
     public $direction   = 'asc';
     public $readyToLoad = false;
@@ -26,9 +26,8 @@ class BuffetIndex extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $rules = [
-        'buffet.service'  => 'required',
-        'buffet.adults'   => 'required',
-        'buffet.children' => 'required',
+        'permission.name'        => 'required',
+        'permission.description' => 'required'
     ];
 
     protected $listeners = [
@@ -38,9 +37,9 @@ class BuffetIndex extends Component
 
     protected $queryString = [
         'search'    => ['except' => ''],
-        'cant'      => ['except' => '10'],
-        'sort'      => ['except' => 'date'],
-        'direction' => ['except' => 'desc']
+        'cant'      => ['except' => '25'],
+        'sort'      => ['except' => 'id'],
+        'direction' => ['except' => 'asc']
     ];
 
     public function updatingSearch() {
@@ -50,16 +49,16 @@ class BuffetIndex extends Component
     public function render()
     {
         if ($this->readyToLoad){
-            $buffets = Buffet::where('service', 'LIKE', '%' . $this->search . '%')
-                            ->orderby($this->sort, $this->direction)
-                            ->paginate($this->cant);
+            $permissions = Permission::where('name', 'LIKE', '%' . $this->search . '%')
+                                    ->orderby($this->sort, $this->direction)
+                                    ->paginate($this->cant);
         }else{
-            $buffets = [];
+            $permissions = [];
         }
-        return view('livewire.audit.buffet-index', compact('buffets'));
+        return view('livewire.permissions.permission-index', compact('permissions'));
     }
 
-    public function loadBuffets()
+    public function loadPermissions()
     {
         $this->readyToLoad = true;
     }
@@ -77,18 +76,20 @@ class BuffetIndex extends Component
         }
     }
 
-    public function edit(Buffet $buffet)
+    public function edit(Permission $permission)
     {
-        $this->buffet = $buffet;
+        $this->permission = $permission;
     }
 
     public function update()
     {
-        if ($this->buffet->service && $this->buffet->adults && $this->buffet->children)
+        if ($this->permission->name)
         {
-            $this->buffet->save();
-            $this->emit('alert', 'Se Actualizo el Restaurante sin problemas');
-            $this->emitTo('audit.buffet-index', 'render');
+            $this->permission->save();
+
+            $this->emit('alert', 'Se Actualizo el Permiso sin problemas');
+
+            $this->emitTo('permissions.permission-index', 'render');
         }else
         {
             $this->emit('error', 'Ocurrio un error revise bien el formulario');
@@ -99,11 +100,11 @@ class BuffetIndex extends Component
     public function delete($id)
     {
         try {
-            $variable = Buffet::findOrFail($id);
+            $variable = Permission::findOrFail($id);
             $variable->delete();
         } catch(Throwable $e) {
             Log::error($e);
         }
-        $this->emitTo('audit.buffet-index', 'render');
+        $this->emitTo('permissions.permission-index', 'render');
     }
 }

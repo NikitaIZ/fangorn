@@ -15,5 +15,5 @@
 @stop
 
 @section('content')
-    @livewire('roles.roles-create')
+    @livewire('roles.role-create')
 @stop

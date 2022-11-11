@@ -153,26 +153,26 @@
                 </div>
                 <div class="card-body">
                     <div class="gauge-container">
-                        <div id="date-{{ $date }}" data-percentage={{ number_format($data["today"]["PDS"], 2, ',', '.') }} class="gauge"></div>
+                        <div id="date-{{ $date }}" data-percentage={{ number_format($data["today"]["PDS"], 2) }} class="gauge"></div>
                     </div>
                 </div>
                 <div class="card-footer bg-transparent">
                     <div class="row">
                         <div class="col-4 text-center">
                             <div class="gauge-mini-container">
-                                <div id="date-{{ $date }}-mini-1" data-percentage={{ number_format($data["yesterday"]["PDS"], 2, ',', '.') }} class="gauge-mini text-white">
+                                <div id="date-{{ $date }}-mini-1" data-percentage={{ number_format($data["yesterday"]["PDS"], 2) }} class="gauge-mini text-white">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4 text-center">
                             <div class="gauge-mini-container">
-                                <div id="date-{{ $date }}-mini-2" data-percentage={{ number_format($data["today"]["PMS"], 2, ',', '.') }} class="gauge-mini">
+                                <div id="date-{{ $date }}-mini-2" data-percentage={{ number_format($data["today"]["PMS"], 2) }} class="gauge-mini">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4 text-center">
                             <div class="gauge-mini-container">
-                                <div id="date-{{ $date }}-mini-3" data-percentage={{ number_format($data["today"]["PYS"], 2, ',', '.') }} class="gauge-mini">
+                                <div id="date-{{ $date }}-mini-3" data-percentage={{ number_format($data["today"]["PYS"], 2) }} class="gauge-mini">
                                 </div>
                             </div>
                         </div>

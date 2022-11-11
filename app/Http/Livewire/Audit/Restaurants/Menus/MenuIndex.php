@@ -131,13 +131,13 @@ class MenuIndex extends Component
 
     private function updateDataJson($data, $name){
         $dataJson = json_encode($data, true);
-        file_put_contents("D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads\menu-". $name .".json", $dataJson);
+        file_put_contents(config('app.ftp.local') . "\menu-" . $name . ".json", $dataJson);
 
-        $ftp_server="ftp.wyndhamconcorde.com";
-        $ftp_user_name="pupjhhbnaibb";
-        $ftp_user_pass="wyndCCE.2022#%!";
-        $file = "D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads\menu-". $name .".json";//tobe uploaded
-        $remote_file = "public_html/wp/wp-content/uploads/menu-". $name .".json";
+        $ftp_server = config('app.ftp.server');
+        $ftp_user_name = config('app.ftp.name');
+        $ftp_user_pass = config('app.ftp.pass');
+        $file = config('app.ftp.local') . "\menu-" . $name . ".json";//tobe uploaded
+        $remote_file = config('app.ftp.remote') . "menu-". $name . ".json";
 
         // set up basic connection
         $conn_id = ftp_connect($ftp_server);

@@ -60,6 +60,8 @@ class HomeController extends Controller
         $allData["types"]     = $this->get_types_data($date, $date);
         $allData["buffet"]    = Buffet::get();
 
+        var_dump($allData["month"][0]);
+
         if ($allData["today"]["PDS"] >= 50){
             $allData["box"]["color"][0] = "small-box bg-warning";
             $allData["box"]["color"][1] = "small-box bg-danger";
@@ -80,31 +82,77 @@ class HomeController extends Controller
         return $dolar;
     }
 
-    private function get_color($id)
+    private function get_color_type($name)
     {
-        switch ($id) {
-            case 0: return "color:white; background-color: rgba(0, 123, 255 "; break;
-            case 1: return "color:white; background-color: rgba(40, 167, 69 "; break;
-            case 2: return "color:white; background-color: rgba(23, 162, 184 "; break;
-            case 3: return "color:black; background-color: rgba(255, 193, 7 "; break;
-            case 4: return "color:white; background-color: rgba(220, 53, 69 "; break;
-            case 5: return "color:white; background-color: rgba(108, 117, 125 "; break;
-            case 6: return "color:white; background-color: rgba(52, 58, 64 "; break;
-            case 7: return "color:white; background-color: rgba(232, 5, 255 "; break;
+        switch ($name) {
+            case "CNT": return "color:white; background-color: rgba(206, 32, 41"; break;
+            case "CMP": return "color:white; background-color: rgba(255, 104, 29"; break;
+            case "HSU": return "color:black; background-color: rgba(255, 221, 38"; break;
+            case "COM": return "color:white; background-color: rgba(0, 163, 254"; break;
+            case "PKG": return "color:white; background-color: rgba(0, 35, 111"; break;
+            case "SLB": return "color:white; background-color: rgba(45, 1, 109"; break;
+            case "WHD": return "color:white; background-color: rgba(13, 109, 1"; break;
+            case "WHI": return "color:black; background-color: rgba(146, 229, 75"; break;
+            case "MEG": return "color:white; background-color: rgba(75, 229, 112"; break;
+            case "NAT": return "color:white; background-color: rgba(40, 229, 129"; break;
+            case "LOC": return "color:white; background-color: rgba(7, 155, 123"; break;
+            case "GOV": return "color:white; background-color: rgba(10, 196, 215"; break;
+            case "BPR": return "color:white; background-color: rgba(8, 138, 222"; break;
+            case "INT": return "color:white; background-color: rgba(7, 113, 232"; break;
+            case "IOP": return "color:white; background-color: rgba(13, 70, 192"; break;
+            case "DIS": return "color:white; background-color: rgba(29, 32, 231"; break;
+            case "WHPI": return "color:white; background-color: rgba(128, 88, 242"; break;
+            case "WHPN": return "color:white; background-color: rgba(77, 40, 181"; break;
+            case "WHC": return "color:white; background-color: rgba(132, 56, 229"; break;
+            case "GCP": return "color:white; background-color: rgba(114, 24, 229"; break;
+            case "GCM": return "color:white; background-color: rgba(172, 48, 243"; break;
+            case "GDP": return "color:white; background-color: rgba(207, 13, 255"; break;
+            case "GEP": return "color:white; background-color: rgba(245, 79, 240"; break;
+            case "GTR": return "color:white; background-color: rgba(234, 24, 227"; break;
+            case "GTT": return "color:white; background-color: rgba(185, 26, 132"; break;
+            case "GAS": return "color:white; background-color: rgba(249, 15, 171"; break;
+            case "GMP": return "color:white; background-color: rgba(200, 3, 93"; break;
+            case "GSF": return "color:white; background-color: rgba(217, 5, 75"; break;
+            case "WEDD": return "color:white; background-color: rgba(0, 0, 0"; break;
+            case "GGV": return "color:white; background-color: rgba(179, 218, 3"; break;
+            case "ATP": return "color:white; background-color: rgba(227, 220, 7"; break;
         }
     }
 
-    private function get_color_line($id)
+    private function get_color_type_line($name)
     {
-        switch ($id) {
-            case 0: return "rgba(0, 123, 255, 0.5)"; break;
-            case 1: return "rgba(40, 167, 69, 0.5)"; break;
-            case 2: return "rgba(23, 162, 184, 0.5)"; break;
-            case 3: return "rgba(255, 193, 7, 0.5)"; break;
-            case 4: return "rgba(220, 53, 69, 0.5)"; break;
-            case 5: return "rgba(108, 117, 125, 0.5)"; break;
-            case 6: return "rgba(52, 58, 64, 0.5)"; break;
-            case 7: return "rgba(232, 5, 255, 0.5)"; break;
+        switch ($name) {
+            case "CNT": return "rgba(206, 32, 41, 0.5)"; break;
+            case "CMP": return "rgba(255, 104, 29, 0.5)"; break;
+            case "HSU": return "rgba(255, 221, 38, 0.5)"; break;
+            case "COM": return "rgba(0, 163, 254, 0.5)"; break;
+            case "PKG": return "rgba(0, 35, 111, 0.5)"; break;
+            case "SLB": return "rgba(45, 1, 109, 0.5)"; break;
+            case "WHD": return "rgba(13, 109, 1, 0.5)"; break;
+            case "WHI": return "rgba(146, 229, 75, 0.5)"; break;
+            case "MEG": return "rgba(75, 229, 112, 0.5)"; break;
+            case "NAT": return "rgba(40, 229, 129, 0.5)"; break;
+            case "LOC": return "rgba(7, 155, 123, 0.5)"; break;
+            case "GOV": return "rgba(10, 196, 215, 0.5)"; break;
+            case "BPR": return "rgba(8, 138, 222, 0.5)"; break;
+            case "INT": return "rgba(7, 113, 232, 0.5)"; break;
+            case "IOP": return "rgba(13, 70, 192, 0.5)"; break;
+            case "DIS": return "rgba(29, 32, 231, 0.5)"; break;
+            case "WHPI": return "rgba(128, 88, 242, 0.5)"; break;
+            case "WHPN": return "rgba(77, 40, 181, 0.5)"; break;
+            case "WHC": return "rgba(132, 56, 229, 0.5)"; break;
+            case "GCP": return "rgba(114, 24, 229, 0.5)"; break;
+            case "GCM": return "rgba(172, 48, 243, 0.5)"; break;
+            case "GDP": return "rgba(207, 13, 255, 0.5)"; break;
+            case "GEP": return "rgba(245, 79, 240, 0.5)"; break;
+            case "GTR": return "rgba(234, 24, 227, 0.5)"; break;
+            case "GTT": return "rgba(185, 26, 132, 0.5)"; break;
+            case "GAS": return "rgba(249, 15, 171, 0.5)"; break;
+            case "GMP": return "rgba(200, 3, 93, 0.5)"; break;
+            case "GSF": return "rgba(217, 5, 75, 0.5)"; break;
+            case "WEDD": return "rgba(0, 0, 0, 0.5)"; break;
+            case "GGV": return "rgba(179, 218, 3, 0.5)"; break;
+            case "ATP": return "rgba(227, 220, 7, 0.5)"; break;
         }
     }
 
@@ -233,7 +281,7 @@ class HomeController extends Controller
             $pieces = explode("_", $value['HDG']);
             $types[$key]['head'] = $value['HDG'];
             $types[$key]['name'] = $pieces[0];
-            $types[$key]["descrip"] = $this->get_description_name($types[$key]['name']);
+            $types[$key]["descrip"] = $this->get_description_name($pieces[0]);
         }
 
         foreach ($types as $order => $type) {
@@ -261,8 +309,8 @@ class HomeController extends Controller
         }
 
         foreach ($types as $order => $type) {
-            $types[$order]['color'] = $this->get_color($order);
-            $types[$order]['lines'] = $this->get_color_line($order);
+            $types[$order]['color'] = $this->get_color_type($type['name']);
+            $types[$order]['lines'] = $this->get_color_type_line($type['name']);
             foreach ($dats as $key => $date) {
                 if (array_key_exists($key, $type['rooms']) == false) {
                     $types[$order]['rooms'][$key] = null;
@@ -351,7 +399,7 @@ class HomeController extends Controller
             $pieces = explode("_", $value['HDG']);
             $types[$key]['head'] = $value['HDG'];
             $types[$key]['name'] = $pieces[0];
-            $types[$key]["descrip"] = $this->get_description_name($types[$key]['name']);
+            $types[$key]["descrip"] = $this->get_description_name($pieces[0]);
         }
 
         foreach ($types as $order => $type) {
@@ -379,8 +427,8 @@ class HomeController extends Controller
         }
 
         foreach ($types as $order => $type) {
-            $types[$order]['color'] = $this->get_color($order);
-            $types[$order]['lines'] = $this->get_color_line($order);
+            $types[$order]['color'] = $this->get_color_type($type['name']);
+            $types[$order]['lines'] = $this->get_color_type_line($type['name']);
             foreach ($dats as $key => $date) {
                 if (array_key_exists($key, $type['rooms']) == false) {
                     $types[$order]['rooms'][$key] = null;
@@ -469,7 +517,7 @@ class HomeController extends Controller
             $pieces = explode("_", $value['HDG']);
             $types[$key]['head'] = $value['HDG'];
             $types[$key]['name'] = $pieces[0];
-            $types[$key]["descrip"] = $this->get_description_name($types[$key]['name']);
+            $types[$key]["descrip"] = $this->get_description_name($pieces[0]);
         }
 
         foreach ($types as $order => $type) {
@@ -486,8 +534,8 @@ class HomeController extends Controller
         }
 
         foreach ($types as $order => $type) {
-            $types[$order]['color'] = $this->get_color($order);
-            $types[$order]['lines'] = $this->get_color_line($order);
+            $types[$order]['color'] = $this->get_color_type($type['name']);
+            $types[$order]['lines'] = $this->get_color_type_line($type['name']);
             foreach ($dats as $key => $date) {
                 if (array_key_exists($key, $type['rooms']) == false) {
                     $types[$order]['rooms'][$key] = null;
@@ -522,8 +570,8 @@ class HomeController extends Controller
         $data["PDS"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 36) ->value('day');
         $data["PMS"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 36) ->value('month');
         $data["PYS"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 36) ->value('year');
-        $data["ARR"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 37) ->value('day');
-        $data["DEP"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 45) ->value('day');
+        $data["ARR"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 93) ->value('day');
+        $data["DEP"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 95) ->value('day');
         $data["HAR"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 119)->value('day');
         $data["PDR"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 121)->value('day');
         $data["ADB"] = XmlHistoryData::where('report_id', $report)->where('heading_id', 122)->value('day');
@@ -632,8 +680,9 @@ class HomeController extends Controller
     private function get_month_data($date, $i = 0)
     {
         $date_real  = date("Y-m-d",  strtotime(date($date) . "- 1 days")); //31-08-22
-        $date_start = date("Y-m-02", strtotime(date($date_real) . "+" . $i . "month"));//02-09-22
-        $date_end   = date("Y-m-01", strtotime(date($date_real) . "+". $i+1 ."month"));//01-10-22
+        $date_valid = date("Y-m-15",  strtotime(date($date_real))); //31-08-22
+        $date_start = date("Y-m-02", strtotime(date($date_valid) . "+" . $i . "month"));//02-09-22
+        $date_end   = date("Y-m-01", strtotime(date($date_valid) . "+". $i+1 ."month"));//01-10-22
 
         $id_history = XmlHistoryReport::where('date', $date_end)->value('id');
 
@@ -701,7 +750,7 @@ class HomeController extends Controller
 
                 $result = array_merge($history, $forecast);
 
-                $all['name'] = $this->get_name_month(date("m", strtotime(date($date_real)."+" . $i . "month")));
+                $all['name'] = $this->get_name_month(date("m", strtotime($date_start)));
 
                 $all['NRS'] = array_column($result, 'HAB');
                 $all['NPS'] = array_column($result, 'NPS');
@@ -1036,6 +1085,7 @@ class HomeController extends Controller
 
     public function index(){
         $date = date("Y-m-d");
+        
         $data = $this->allData($date);
         $number = date("d/m/Y", strtotime($date));
         $start = XmlHistoryReport::orderBy('date', 'DESC')->value('date');

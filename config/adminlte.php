@@ -287,12 +287,12 @@ return [
             ],
         ],
         [
-            'can'     => 'test',
+            'can'     => 'revenue_manager.index',
             'text'    => 'Reservas',
             'icon'    => 'fas fa-fw fa-address-book',
             'submenu' => [
                 [
-                    'can'   => 'test',
+                    'can'   => 'revenue_manager.index',
                     'text'  => 'Rev Mgr',
                     'icon'  => 'fas fa-fw fa-book-open',
                     'route' => 'reserves.manager.index',
@@ -322,15 +322,15 @@ return [
             'can'    => 'roles.index',
         ],
         [
-            'can'   => 'roles.index',
+            'can'   => 'roles.create',
             'text'  => 'Asignar',
-            'route' => 'roles.index',
+            'route' => 'users.index',
             'icon'  => 'fas fa-fw fa-id-card-alt',
         ],
         [
-            'can'   => 'roles.create',
+            'can'   => 'roles.index',
             'text'  => 'Roles',
-            'route' => 'roles.create',
+            'route' => 'roles.index',
             'icon'  => 'fas fa-fw fa-crown',
         ],
         [

@@ -1,13 +1,17 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\TestController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ProfileController;
+
+use App\Http\Controllers\Users\UserController;
 
 use App\Http\Controllers\CCTV\CisternsController;
 
@@ -27,7 +31,6 @@ use App\Http\Controllers\Permissions\PermissionController;
 
 use App\Http\Controllers\Reserves\dinnersController;
 use App\Http\Controllers\Reserves\RevenueManagerController;
-use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,11 +56,11 @@ Route::post('register', [RegisterController::class, 'create'])->middleware('can:
 
 /** Paginas de Perfil de Usuario **/
 
-Route::get   ('profile',               [ProfileController::class, 'index'])              ->name('profile.index');
-Route::post  ('profile',               [ProfileController::class, 'update'])             ->name('profile.update');
-Route::post  ('profile/password',      [ProfileController::class, 'updatePassword'])     ->name('password.update');
-Route::post  ('profile/authenticator', [ProfileController::class, 'updateAuthenticator'])->name('authenticator.update');
-Route::delete('profile',               [ProfileController::class, 'deleteProfilePhoto']) ->name('profile-photo.delete');
+//Route::get   ('profile',               [ProfileController::class, 'index'])              ->name('profile.index');
+//Route::post  ('profile',               [ProfileController::class, 'update'])             ->name('profile.update');
+//Route::post  ('profile/password',      [ProfileController::class, 'updatePassword'])     ->name('password.update');
+//Route::post  ('profile/authenticator', [ProfileController::class, 'updateAuthenticator'])->name('authenticator.update');
+//Route::delete('profile',               [ProfileController::class, 'deleteProfilePhoto']) ->name('profile-photo.delete');
 
 /** Paginas del Departamento Auditoria **/
 Route::get('audit/dolars', [DolarController::class, 'index'])->name('audit.dolars.index');
@@ -88,8 +91,8 @@ Route::resource('cctv/cisterns', CisternsController::class)->names([
                                                                     ]);
 
 /** Paginas del Departamento Reservas y Eventos **/
-Route::get('reserves/revenue_manager',  [RevenueManagerController::class, 'index'])->middleware('can:test')->name('reserves.manager.index');
-Route::post('reserves/revenue_manager', [RevenueManagerController::class, 'store'])->middleware('can:test')->name('reserves.manager.store');
+Route::get('reserves/revenue_manager',  [RevenueManagerController::class, 'index'])->middleware('can:revenue_manager.index')->name('reserves.manager.index');
+Route::post('reserves/revenue_manager', [RevenueManagerController::class, 'store'])->middleware('can:revenue_manager.index')->name('reserves.manager.store');
 
 Route::get('reserves/dinners',           [dinnersController::class, 'index'])    ->middleware('can:test')->name('reserves.dinners.index');
 Route::get('reserves/dinners/christmas', [dinnersController::class, 'christmas'])->middleware('can:test')->name('reserves.dinners.christmas');
@@ -97,7 +100,10 @@ Route::get('reserves/dinners/new-year',  [dinnersController::class, 'newYear']) 
 
 /** Role y Permisos **/ 
 
+Route::resource('users', UserController::class);
+
 Route::resource('roles', RoleController::class);
+
 Route::resource('roles/permissions', RolePermissionController::class)->names([
                                                                                 'index'   => 'roles.permissions.index',
                                                                                 'create'  => 'roles.permissions.create',

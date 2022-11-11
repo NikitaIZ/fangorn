@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Reserves;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\Reserves\Event;
+use App\Models\Reserves\EventArea;
+use App\Models\Reserves\EventBooking;
+
+
 class dinnersController extends Controller
 {
     private function connection(){
@@ -18,118 +23,125 @@ class dinnersController extends Controller
         return $data;
     }
 
-    private function orden($array = array()){
-        $groups = array(
-            "A" => 0,
-            "B" => 0,
-            "C" => 0,
-            "D" => 0,
-            "E" => 0
-        );
+    private function update_booking(){
+        $data = $this->connection();
 
-        $prices = array(
-            "180" => 0,
-            "80"  => 0,
-            "250" => 0,
-            "200" => 0,
-            "100" => 0,
-            "150" => 0,
-            "75"  => 0,
-            "130" => 0,
-            "65"  => 0,
-            "50"  => 0,
-            "60"  => 2,
-            "40"  => 0
-        );
-
-        $i = 0; $childrem = 0; $adults = 0; $total = 0;
-
-        foreach ($array as $value){
-            if ($value["status"] == "wc-completed") {
-                $total     = $total     + $value["total"];
-                $childrem  = $childrem  + $value["niños"];
-                $adults    = $adults    + $value["adultos"];
-
-                $nadul[$i] = $value["adultos"];
-                $nchil[$i] = $value["niños"];
-                $sales[$i] = $value["total"];
-                $dates[$i] = date("d/m/y", strtotime($value["fecha"]));
-
-                $i++;
-
-                switch ($value["grupo"]) {
-                    case 'A':
-                        $groups["A"] = $groups["A"] + $value["cantidad"];
-                        break;
-                    case 'B':
-                        $groups["B"] = $groups["B"] + $value["cantidad"];
-                        break;
-                    case 'C':
-                        $groups["C"] = $groups["C"] + $value["cantidad"];
-                        break;
-                    case 'D':
-                        $groups["D"] = $groups["D"] + $value["cantidad"];
-                        break;
-                    case 'E':
-                        $groups["E"] = $groups["E"] + $value["cantidad"];
-                        break;
-                }
-
-                switch ($value["precio"]) {
-                    case '250':
-                        $prices["250"] = $prices["250"] + $value["adultos"];
-                        $prices["100"] = $prices["100"] + $value["niños"];
-                        break;
-                    case '200':
-                        $prices["200"] = $prices["200"] + $value["adultos"];
-                        $prices["100"] = $prices["100"] + $value["niños"];
-                        break;
-                    case '150':
-                        $prices["150"] = $prices["150"] + $value["adultos"];
-                        $prices["75"]  = $prices["75"]  + $value["niños"];
-                        break;
-                    case '180':
-                        $prices["180"] = $prices["180"] + $value["adultos"];
-                        $prices["80"]  = $prices["80"]  + $value["niños"];
-                        break;
-                    case '130':
-                        $prices["130"] = $prices["130"] + $value["adultos"];
-                        $prices["65"]  = $prices["65"]  + $value["niños"];
-                        break;
-                    case '100':
-                        $prices["100"] = $prices["100"] + $value["adultos"];
-                        $prices["50"]  = $prices["50"]  + $value["niños"];
-                        break;
-                    case '60':
-                        $prices["60"] = $prices["60"] + $value["adultos"];
-                        $prices["40"]  = $prices["40"]  + $value["niños"];
-                        break;
-                }
+        foreach ($data["Cena Navideña"] as $value) {
+            if ($value['status'] == "wc-completed") {
+                $status = 1;
+            }else{
+                $status = 2;
+            }
+            if (EventBooking::where('order_id', $value['orderId'])->doesntExist()) {
+                $sell = new EventBooking();
+                $sell->event_id       = 3;
+                $sell->order_id       = $value['orderId'];
+                $sell->client         = $value['cliente'];
+                $sell->adults         = $value['adultos'];
+                $sell->childrem       = $value['niños'];
+                $sell->subtotal       = $value['subtotal'];
+                $sell->coupon         = $value['cupon'];
+                $sell->total          = $value['total'];
+                $sell->price_adult    = $value['precio'];
+                $sell->price_childrem = $value['precio'] / 2;
+                $sell->area           = $value['grupo'];
+                $sell->seats          = $value['seats'];
+                $sell->status         = $status;
+                $sell->created_at     = $value['fecha'];
+                $sell->save();
+            }else{
+                $booking = EventBooking::where('order_id', $value['orderId'])->get();
+                $booking->status = $status;
+                $booking->save();
             }
         }
 
+        foreach ($data["Cena de Año Nuevo"] as $value) {
+            if ($value['status'] == "wc-completed") {
+                $status = 1;
+            }else{
+                $status = 2;
+            }
+            if (EventBooking::where('order_id', $value['orderId'])->doesntExist()) {
+                $sell = new EventBooking();
+                $sell->event_id       = 4;
+                $sell->order_id       = $value['orderId'];
+                $sell->client         = $value['cliente'];
+                $sell->adults         = $value['adultos'];
+                $sell->childrem       = $value['niños'];
+                $sell->subtotal       = $value['subtotal'];
+                $sell->coupon         = $value['cupon'];
+                $sell->total          = $value['total'];
+                $sell->price_adult    = $value['precio'];
+                $sell->price_childrem = $value['precio'] / 2;
+                $sell->area           = $value['grupo'];
+                $sell->seats          = $value['seats'];
+                $sell->status         = $status;
+                $sell->created_at     = $value['fecha'];
+                $sell->save();
+            }else{
+                $booking = EventBooking::where('order_id', $value['orderId'])->get();
+                $booking->status = $status;
+                $booking->save();
+            }
+        }
+    }
+
+    private function orden($date = 1, $status = 'completed'){
+
+        $sales = array(); $dates = array(); $adults = array(); $childrem = array(); $groups = array(); $prices = array();
+
+        $groups = EventBooking::select('area')->where('event_id', $date)->where('status', $status)->orderBy('area', 'asc')->groupBy('area')->get()->toArray();
+        $prices_a = EventBooking::select('price_adult AS price')->where('event_id', $date)->where('status', $status)->orderBy('price_adult', 'desc')->groupBy('price_adult')->get()->toArray();
+        $prices_c = EventBooking::select('price_childrem AS price')->where('event_id', $date)->where('status', $status)->orderBy('price_childrem', 'desc')->groupBy('price_childrem')->get()->toArray();
+
+        foreach ($groups as $key => $value) {
+            $groups[$key]['volume'] = EventArea::where('event_id', $date)->where('name', $value['area'])->value('volume');
+            $groups[$key]['count']  = EventBooking::where('event_id', $date)->where('status', $status)->where('area', $value['area'])->count();
+        }
+
+        foreach ($prices_a as $key => $value) {
+            $prices_a[$key]['count'] = EventBooking::where('event_id', $date)->where('status', $status)->where('price_adult', $value['price'])->count();
+        }
+
+        foreach ($prices_c as $key => $value) {
+            $prices_c[$key]['count'] = EventBooking::where('event_id', $date)->where('status', $status)->where('price_childrem', $value['price'])->count();
+        }
+
+        $prices = array_merge($prices_a, $prices_c);
+
+        $array = EventBooking::where('event_id', $date)->where('status', $status)->get()->toArray();
+
+        foreach ($array as $key => $value) {
+            $adults[$key] = $value["adults"];
+            $childrem[$key] = $value["childrem"];
+            $sales[$key] = $value["total"];
+            $dates[$key] = date("d/m/y", strtotime($value["created_at"]));
+        }
+
         $data = array(
-            "sales" => array(
+            "balance" => Event::where('id', $date)->value('balance_point'),
+            "sales"   => array(
                 "data"     => $sales,
                 "labels"   => $dates,
-                "adults"   => $nadul,
-                "childrem" => $nchil
+                "adults"   => $adults,
+                "childrem" => $childrem
             ),
             "groups"   => $groups,
             "prices"   => $prices,
-            "total"    => $total,
-            "adults"   => $adults,
-            "childrem" => $childrem,
-            "quantity" => $i
+            "total"    => EventBooking::where('event_id', $date)->where('status', $status)->sum('total'),
+            "adults"   => EventBooking::where('event_id', $date)->where('status', $status)->sum('adults'),
+            "childrem" => EventBooking::where('event_id', $date)->where('status', $status)->sum('childrem'),
+            "quantity" => EventBooking::where('event_id', $date)->where('status', $status)->count(),
         );
 
         return $data;
     }
 
-    private function balancePoint($array = array(), $CF = 0, $i=0){
+    private function balancePoint($array = array(), $i = 0){
         $point = array(
-            "initial" => $CF,
-            "current" => -$CF
+            "initial" => $array['balance'],
+            "current" => -$array['balance']
         );
 
         $date = array_unique($array["sales"]["labels"]);
@@ -140,63 +152,60 @@ class dinnersController extends Controller
             $i++;
         }
 
-        foreach ($point["date"] as $key1 => $value1) {
-            foreach ($array["sales"]["labels"] as $key2 => $value2) {
-                if ($value2 == $value1) {
-                    $point["data"][$key1] += $array["sales"]["data"][$key2];
+        if ($date != null) {
+            foreach ($point["date"] as $key1 => $value1) {
+                foreach ($array["sales"]["labels"] as $key2 => $value2) {
+                    if ($value2 == $value1) {
+                        $point["data"][$key1] += $array["sales"]["data"][$key2];
+                    }
                 }
+            }
+
+            foreach ($point["data"] as $key => $value) {
+                $point["meta"][$key] = $point["current"] + $value;
+                $point["perc"][$key] = $point["meta"][$key] / $point["initial"] * 100;
+                $point["current"] = $point["current"] + $value;
             }
         }
 
-        foreach ($point["data"] as $key => $value) {
-            $point["meta"][$key] = $point["current"] + $value;
-            $point["perc"][$key] = $point["meta"][$key] / $point["initial"] * 100;
-
-            $point["current"] = $point["current"] + $value;
-        }
         return $point;
     }
 
 
-    function index($sales = array()){
+    function index(){
 
-        $data = $this->connection();
+        //$this->update_booking();
+        //$date = date("Y-24-31", strtotime($date));
 
-        $sales["christmas"] = $this->orden($data["Cena Navideña"]);
-        $sales["christmas"]["adults"] = $sales["christmas"]["adults"];
-
-        $sales["NewYear"] = $this->orden($data["Cena de Año Nuevo"]);
+        $data["christmas"] = $this->orden(Event::where('date', date("2021-12-24"))->value('id'));
+        $data["new_year"]  = $this->orden(Event::where('date', date("2021-12-31"))->value('id'));
 
         $total = array(
-            0 => $sales["christmas"]["total"] + $sales["NewYear"]["total"],
-            1 => $sales["christmas"]["total"] ,
-            2 => $sales["NewYear"]["total"]
+            0 => $data["christmas"]["total"] + $data["new_year"]["total"],
+            1 => $data["christmas"]["total"] ,
+            2 => $data["new_year"]["total"]
         );
 
-        $point["christmas"] = $this->balancePoint($sales["christmas"], 13137.15);
-        $point["NewYear"] = $this->balancePoint($sales["NewYear"], 50340.87);
+        $point["christmas"] = $this->balancePoint($data["christmas"]);
+        $point["new_year"]  = $this->balancePoint($data["new_year"]);
 
-        return view('reserves.index', compact('data', 'total', 'sales', 'point'));
+        return view('reserves.index', compact('data', 'total', 'point'));
     }
 
-    private function total($array = array(), $status="", $total = 0, $amount = 0, $childrem = 0, $adults = 0){
-        foreach ($array as $value){
-            if ($value["status"] == $status) {
-                $total     = $total     + $value["total"];
-                $childrem  = $childrem  + $value["niños"];
-                $adults    = $adults    + $value["adultos"];
-                $amount++;
-            }
-        }
-        $data = array($total, $amount, $adults, $childrem);
+    private function total($date = 1, $status = "completed") {
+        $data = array(
+            0 => EventBooking::where('event_id', $date)->where('status', $status)->sum('total'),
+            1 => EventBooking::where('event_id', $date)->where('status', $status)->sum('adults'),
+            2 => EventBooking::where('event_id', $date)->where('status', $status)->sum('childrem'),
+            3 => EventBooking::where('event_id', $date)->where('status', $status)->count(),
+        );
         return $data;
     }
 
     function christmas(){
-        $data = $this->connection();
-        $data = $data["Cena Navideña"];
-        $total["completed"] = $this->total($data, "wc-completed");
-        $total["hold"]      = $this->total($data, "wc-on-hold");
+        $data = EventBooking::where('event_id', 1)->get()->toArray();
+        $total["completed"] = $this->total(1, "completed");
+        $total["hold"]      = $this->total(1, "on hold");
 
         return view('reserves.christmas', compact('data', 'total'));
     }

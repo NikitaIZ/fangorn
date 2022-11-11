@@ -7,32 +7,6 @@ var charts_types_forecast = [];
 const skipped = (ctx, value) => ctx.p0.skip || ctx.p1.skip ? value : undefined;
 const down    = (ctx, value, days) => ctx.p0.parsed.x >= days-1  ? value : undefined;
 
-const colors = [{
-    borderColor: 'rgba(0, 123, 255, 1)',
-    backgroundColor: 'rgb(0, 123, 255, 0.5)',
-},{
-    borderColor: 'rgba(40, 167, 69, 1)',
-    backgroundColor: 'rgb(40, 167, 69, 0.5)',
-},{
-    borderColor: 'rgba(23, 162, 184, 1)',
-    backgroundColor: 'rgb(23, 162, 184, 0.5)',
-},{
-    borderColor: 'rgba(255, 193, 7, 1)',
-    backgroundColor: 'rgb(255, 193, 7, 0.5)',
-},{
-    borderColor: 'rgba(220, 53, 69, 1)',
-    backgroundColor: 'rgb(220, 53, 69, 0.5)',
-},{
-    borderColor: 'rgba(108, 117, 125, 1)',
-    backgroundColor: 'rgb(108, 117, 125, 0.5)',
-},{
-    borderColor: 'rgba(52, 58, 64, 1)',
-    backgroundColor: 'rgb(52, 58, 64, 0.5)',
-},{
-    borderColor: 'rgba(232, 5, 255, 1)',
-    backgroundColor: 'rgb(232, 5, 255, 0.5)',
-}]
-
 const grill = {
     x: {
         grid: {
@@ -70,6 +44,48 @@ const title = {
         },
     }
 };
+
+function color_type(name, one) {
+    switch (name) {
+        case "CNT": label = "rgba(206, 32, 41,"; break;
+        case "CMP": label = "rgba(255, 104, 29,"; break;
+        case "HSU": label = "rgba(255, 221, 38,"; break;
+        case "COM": label = "rgba(0, 163, 254,"; break;
+        case "PKG": label = "rgba(0, 35, 111,"; break;
+        case "SLB": label = "rgba(45, 1, 109,"; break;
+        case "WHD": label = "rgba(13, 109, 1,"; break;
+        case "WHI": label = "rgba(146, 229, 75,"; break;
+        case "MEG": label = "rgba(75, 229, 112,"; break;
+        case "NAT": label = "rgba(40, 229, 129,"; break;
+        case "LOC": label = "rgba(7, 155, 123,"; break;
+        case "GOV": label = "rgba(10, 196, 215,"; break;
+        case "BPR": label = "rgba(8, 138, 222,"; break;
+        case "INT": label = "rgba(7, 113, 232,"; break;
+        case "IOP": label = "rgba(13, 70, 192,"; break;
+        case "DIS": label = "rgba(29, 32, 231,"; break;
+        case "WHPI": label = "rgba(128, 88, 242,"; break;
+        case "WHPN": label = "rgba(77, 40, 181,"; break;
+        case "WHC": label = "rgba(132, 56, 229,"; break;
+        case "GCP": label = "rgba(114, 24, 229,"; break;
+        case "GCM": label = "rgba(172, 48, 243,"; break;
+        case "GDP": label = "rgba(207, 13, 255,"; break;
+        case "GEP": label = "rgba(245, 79, 240,"; break;
+        case "GTR": label = "rgba(234, 24, 227,"; break;
+        case "GTT": label = "rgba(185, 26, 132,"; break;
+        case "GAS": label = "rgba(249, 15, 171,"; break;
+        case "GMP": label = "rgba(200, 3, 93,"; break;
+        case "GSF": label = "rgba(217, 5, 75,"; break;
+        case "WEDD": label = "rgba(0, 0, 0,"; break;
+        case "GGV": label = "rgba(179, 218, 3,"; break;
+        case "ATP": label = "rgba(227, 220, 7,"; break;
+    }
+    if (one == true) {
+        label += " 1)";
+    }else{
+        label += " 0.5)";
+    }
+    return label;
+}
 
 function financial(x) {
     return Number.parseFloat(x).toFixed(2);
@@ -984,8 +1000,8 @@ function types_array(report){
             week_types[0]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 hidden: true,
                 tension: 0.5,
@@ -996,8 +1012,8 @@ function types_array(report){
             week_types[1]["color"][i] = {
                 label: element.name,
                 data: element.people,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 hidden: true,
                 tension: 0.5,
@@ -1008,8 +1024,8 @@ function types_array(report){
             week_types[2]["color"][i] = {
                 label: element.name,
                 data: element.adults,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 hidden: true,
                 tension: 0.5,
@@ -1020,8 +1036,8 @@ function types_array(report){
             week_types[3]["color"][i] = {
                 label: element.name,
                 data: element.childrem,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 hidden: true,
                 tension: 0.5,
@@ -1032,8 +1048,8 @@ function types_array(report){
             week_types[4]["color"][i] = {
                 label: element.name,
                 data: element.rat,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 hidden: true,
                 tension: 0.5,
@@ -1045,8 +1061,8 @@ function types_array(report){
             week_types[0]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 tension: 0.5,
                 pointStyle: 'circle',
@@ -1056,8 +1072,8 @@ function types_array(report){
             week_types[1]["color"][i] = {
                 label: element.name,
                 data: element.people,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 tension: 0.5,
                 pointStyle: 'circle',
@@ -1067,8 +1083,8 @@ function types_array(report){
             week_types[2]["color"][i] = {
                 label: element.name,
                 data: element.adults,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 tension: 0.5,
                 pointStyle: 'circle',
@@ -1078,8 +1094,8 @@ function types_array(report){
             week_types[3]["color"][i] = {
                 label: element.name,
                 data: element.childrem,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 tension: 0.5,
                 pointStyle: 'circle',
@@ -1089,8 +1105,8 @@ function types_array(report){
             week_types[4]["color"][i] = {
                 label: element.name,
                 data: element.rat,
-                backgroundColor: colors[i]["backgroundColor"],
-                borderColor: colors[i]["borderColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 borderWidth: 2,
                 tension: 0.5,
                 pointStyle: 'circle',
@@ -1375,8 +1391,8 @@ function forecast_types_array_one(report){
             month_types[0]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                borderColor: colors[i]["borderColor"],
-                backgroundColor: colors[i]["backgroundColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 segment: {
                     borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.0)') || down(ctx, 'rgb(108, 117, 125, 0.5)', report["month"]["history"]["DYS"]),
                     borderDash: ctx => skipped(ctx, [6, 6]) || down(ctx, [6, 6], report["month"]["history"]["DYS"]),
@@ -1392,8 +1408,8 @@ function forecast_types_array_one(report){
             month_types[0]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                borderColor: colors[i]["borderColor"],
-                backgroundColor: colors[i]["backgroundColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 segment: {
                     borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, 'rgb(108, 117, 125, 0.5)', report["month"]["history"]["DYS"]),
                     borderDash: ctx => skipped(ctx, [6, 6]) || down(ctx, [6, 6], report["month"]["history"]["DYS"]),
@@ -1437,8 +1453,8 @@ function forecast_types_array_three(report){
             month_types[0]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                borderColor: colors[i]["borderColor"],
-                backgroundColor: colors[i]["backgroundColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 segment: {
                     borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.0)') || down(ctx, element.lines, report["month"][0]["history"]["DYS"]),
                     borderDash: ctx => skipped(ctx, [6, 6]) || down(ctx, [6, 6], report["month"][0]["history"]["DYS"]),
@@ -1454,8 +1470,8 @@ function forecast_types_array_three(report){
             month_types[0]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                borderColor: colors[i]["borderColor"],
-                backgroundColor: colors[i]["backgroundColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 segment: {
                     borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, element.lines, report["month"][0]["history"]["DYS"]),
                     borderDash: ctx => skipped(ctx, [6, 6]) || down(ctx, [6, 6], report["month"][0]["history"]["DYS"]),
@@ -1475,8 +1491,8 @@ function forecast_types_array_three(report){
             month_types[1]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                borderColor: colors[i]["borderColor"],
-                backgroundColor: colors[i]["backgroundColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 segment: {
                     borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, element.lines, report["month"][1]["history"]["DYS"]),
                     borderDash: ctx => skipped(ctx, [6, 6]) || down(ctx, [6, 6], report["month"][1]["history"]["DYS"]),
@@ -1492,8 +1508,8 @@ function forecast_types_array_three(report){
             month_types[1]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                borderColor: colors[i]["borderColor"],
-                backgroundColor: colors[i]["backgroundColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 segment: {
                     borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, element.lines, report["month"][1]["history"]["DYS"]),
                     borderDash: ctx => skipped(ctx, [6, 6]) || down(ctx, [6, 6], report["month"][1]["history"]["DYS"]),
@@ -1513,8 +1529,8 @@ function forecast_types_array_three(report){
             month_types[2]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                borderColor: colors[i]["borderColor"],
-                backgroundColor: colors[i]["backgroundColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 segment: {
                     borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, element.lines, report["month"][2]["history"]["DYS"]),
                     borderDash: ctx => skipped(ctx, [6, 6]) || down(ctx, [6, 6], report["month"][2]["history"]["DYS"]),
@@ -1530,8 +1546,8 @@ function forecast_types_array_three(report){
             month_types[2]["color"][i] = {
                 label: element.name,
                 data: element.rooms,
-                borderColor: colors[i]["borderColor"],
-                backgroundColor: colors[i]["backgroundColor"],
+                backgroundColor: color_type(element.name, false),
+                borderColor: color_type(element.name, true),
                 segment: {
                     borderColor: ctx => skipped(ctx, 'rgb(0,0,0,0.2)') || down(ctx, element.lines, report["month"][2]["history"]["DYS"]),
                     borderDash: ctx => skipped(ctx, [6, 6]) || down(ctx, [6, 6], report["month"][2]["history"]["DYS"]),

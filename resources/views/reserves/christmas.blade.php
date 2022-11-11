@@ -91,25 +91,21 @@
                             </thead>
                             <tbody>
                                 @foreach ($data as $dato)
-                                    @if ($dato["status"] == "wc-completed")
+                                    @if ($dato["status"] == "completed")
                                         <tr>
-                                            <td>{{ $dato["orderId"] }}</td>
-                                            <td>{{ $dato["cliente"] }}</td>
-                                            <td>{{ $dato["adultos"] }}</td>
-                                            @if ($dato["niños"] != null)
-                                                <td>{{ $dato["niños"] }}</td>
-                                            @else
-                                                <td>0</td>
-                                            @endif
+                                            <td>{{ $dato["order_id"] }}</td>
+                                            <td>{{ $dato["client"] }}</td>
+                                            <td>{{ $dato["adults"] }}</td>
+                                            <td>{{ $dato["childrem"] }}</td>
                                             <td>{{ $dato["subtotal"] }}$</td>
-                                            @if ($dato["cupon"] != null)
-                                                <td> -{{ $dato["cupon"] }}$</td>
+                                            @if ($dato["coupon"] != null)
+                                                <td> -{{ $dato["coupon"] }}$</td>
                                             @else
                                                 <td>Ninguno</td>
                                             @endif
                                             <td>{{ $dato["total"] }}$</td>
-                                            <td>{{ $dato["precio"] }}$</td>
-                                            <td>{{ $dato["fecha"] }}</td>
+                                            <td>{{ $dato["price_adult"] }}$</td>
+                                            <td>{{ $dato["created_at"] }}</td>
                                         </tr>
                                     @endif
                                 @endforeach

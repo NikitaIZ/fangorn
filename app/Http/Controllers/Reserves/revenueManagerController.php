@@ -260,8 +260,6 @@ class RevenueManagerController extends Controller
         $year_start = date("Y-01-02", strtotime($date_real));
         $year_end   = date("Y-01-01", strtotime(date($date_real) . "+ 1 year"));
 
-
-
         $report = XmlHistoryReport::where('date', $date) ->value('id');
 
         $hoteld = XmlHistoryData::where('report_id', $report)->where('heading_id', 3)->value('day');
@@ -383,8 +381,9 @@ class RevenueManagerController extends Controller
     private function get_month_data($date, $i = 0)
     {
         $date_real  = date("Y-m-d",  strtotime(date($date) . "- 1 days")); //31-08-22
-        $date_start = date("Y-m-02", strtotime(date($date_real) . "+" . $i . "month"));//02-09-22
-        $date_end   = date("Y-m-01", strtotime(date($date_real) . "+". $i+1 ."month"));//01-10-22
+        $date_valid = date("Y-m-15",  strtotime(date($date_real))); //31-08-22
+        $date_start = date("Y-m-02", strtotime(date($date_valid) . "+" . $i . "month"));//02-09-22
+        $date_end   = date("Y-m-01", strtotime(date($date_valid) . "+". $i+1 ."month"));//01-10-22
 
         $id_history = XmlHistoryReport::where('date', $date_end)->value('id');
 
@@ -431,7 +430,7 @@ class RevenueManagerController extends Controller
 
                 $result = array_merge($history, $forecast);
 
-                $all['name'] = $this->get_name_month(date("m", strtotime(date($date_real)."+" . $i . "month")));
+                $all['name'] = $this->get_name_month(date("m", strtotime($date_starf)));
 
                 $all['NRS'] = array_column($result, 'HAB');
                 $all['OCC'] = array_column($result, 'OCC');
@@ -745,11 +744,12 @@ class RevenueManagerController extends Controller
     }
 
     public function store(Request $request){
-        $date = $request->date;
-        $data = $this->allData($date);
+        $date   = $request->date;
+        $data   = $this->allData($date);
+        $agent  = new \Jenssegers\Agent\Agent;
         $number = date("d/m/Y", strtotime($date));
-        $start = XmlHistoryReport::orderBy('date', 'DESC')->value('date');
-        $end   = XmlHistoryReport::orderBy('date', 'ASC') ->value('date');
-        return view('dashboard', compact('number', 'start', 'end','date','data'));
+        $start  = XmlHistoryReport::orderBy('date', 'DESC')->value('date');
+        $end    = '2022-07-01';
+        return view('reserves.manager.index', compact('number', 'date', 'data', 'start', 'end', 'agent'));
     }
 }

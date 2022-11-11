@@ -124,7 +124,7 @@ class XmlForecastTextTask extends Command
         $month      = date("m", strtotime(date("d-m-Y")."+ 2 months"));
         $year       = date("Y", strtotime(date("d-m-Y")."+ 2 months"));
         $date_end   = date("d-m-y", (mktime(0,0,0,$month+1,1,$year)));
-        $date_start = date("d-m-y", strtotime(date("d-m-Y")."- 1 days"));
+        $date_start = date("d-m-y");
 
         $date   = $this->orderDateFiles($name); //12/07/22
         $report = XmlHistoryReport::where('folder', $date)->value('id');
@@ -144,7 +144,7 @@ class XmlForecastTextTask extends Command
 
             if ($on == true) {
                 if ($pieces[3] == "ATP") {
-                    $all_data[$i]["date"]  = date("Y-m-d",strtotime($pieces[1] ."+ 1 days"));
+                    $all_data[$i]["date"]  = date("Y-m-d",strtotime($pieces[1]));
                     //$all_data[$i]["date"]  = date("Y-m-d",strtotime($pieces[1]));
                     $all_data[$i]["dolar"] = $this->dolarOrden($all_data[$i]["date"]);
 

@@ -104,7 +104,7 @@ class DolarIndex extends Component
             $day->setTimeZone(new DateTimeZone('America/Caracas'));
 
             if ($this->dolar->date == $day->format('Y-m-d')) {
-                //$this->updateDataJson($this->dolar->daily_rate);
+                $this->updateDataJson($this->dolar->daily_rate);
             }
 
             $this->emit('alert', 'Se Actualizo la Tasa de Cambio seleccionada');
@@ -133,13 +133,13 @@ class DolarIndex extends Component
     private function updateDataJson($dayli){
         $data['dolar'] = $dayli;
         $dataJson = json_encode($data, true);
-        file_put_contents('D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads\datos.json', $dataJson);
+        file_put_contents(config('app.ftp.local') . "\datos.json", $dataJson);
 
-        $ftp_server="ftp.wyndhamconcorde.com";
-        $ftp_user_name="pupjhhbnaibb";
-        $ftp_user_pass="wyndCCE.2022#%!";
-        $file = "D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads\datos.json";//tobe uploaded
-        $remote_file = "public_html/wp/wp-content/uploads/datos.json";
+        $ftp_server = config('app.ftp.server');
+        $ftp_user_name = config('app.ftp.name');
+        $ftp_user_pass = config('app.ftp.pass');
+        $file = config('app.ftp.local') . "\datos.json";
+        $remote_file = config('app.ftp.remote') . "datos.json";
 
         // set up basic connection
         $conn_id = ftp_connect($ftp_server);

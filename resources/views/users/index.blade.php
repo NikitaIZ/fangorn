@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Roles')
+@section('title', 'Usuarios')
 
 @section('css')
     <style>
@@ -50,12 +50,12 @@
 @stop
 
 @section('content_header')
-    <h1>Lista de Roles</h1>
+    <h1>Usuarios</h1>
 @stop
 
 @section('content')
     <div class="row justify-content-center">
-        @livewire('roles.role-index')
+        @livewire('users.user-index')
     </div>
 @stop
 

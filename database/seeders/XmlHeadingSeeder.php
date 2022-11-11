@@ -14,7 +14,7 @@ class XmlHeadingSeeder extends Seeder
      */
     public function run()
     {
-        /*$url   = "http://10.80.23.87:8088/manager.xml";
+        /*$url   = "http://10.80.22.178:8088/manager.xml";
         $xml   = simplexml_load_file($url);
         $json  = json_encode($xml);
         $array = json_decode($json,TRUE);

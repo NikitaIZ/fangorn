@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://10.80.23.87:8088'),
+    'url' => env('APP_URL', 'http://10.80.22.178:8088'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -233,4 +233,12 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
     ],
 
+    //Cosas para FTP
+    'ftp' => [
+        'server' => env('FTP_SERVER'),
+        'name' => env('FTP_USER_NAME'),
+        'pass' => env('FTP_USER_PASS'),
+        'local' => "D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads",
+        'remote' => env('FTP_FILE_REMOTE'),
+    ],
 ];
