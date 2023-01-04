@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "fideloper/proxy": "^4.4",
+        "firebase/php-jwt": "^6.3",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "jenssegers/agent": "^2.6",
@@ -20,9 +21,13 @@
         "laravel/tinker": "^2.5",
         "laravelcollective/html": "^6.2",
         "livewire/livewire": "^2.5",
+        "maatwebsite/excel": "^3.1",
         "silviolleite/laravelpwa": "^2.0",
+        "simplesoftwareio/simple-qrcode": "~4",
         "spatie/laravel-permission": "^4.3",
-        "staudenmeir/laravel-migration-views": "^1.0"
+        "staudenmeir/laravel-migration-views": "^1.0",
+        "symfony/mailer": "^5.4",
+        "weidner/goutte": "^2.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

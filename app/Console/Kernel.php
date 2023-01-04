@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\XmlHistoryTask::class,
         Commands\XmlForecastTask::class,
         Commands\XmlForecastTextTask::class,
+        Commands\Dinners::class,
     ];
 
     /**
@@ -37,7 +38,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('history:task');
         //$schedule->command('forecast:task');
         $schedule->command('forecastext:task');
-        $schedule->command('dolar:task')->timezone('America/Caracas')->between('00:00', '00:30');
+        $schedule->command('dinner:task');
+        //$schedule->command('dolar:task')->timezone('America/Caracas')->between('00:00', '00:30');
     }
 
     /**

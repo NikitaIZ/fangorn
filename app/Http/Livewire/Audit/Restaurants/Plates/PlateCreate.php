@@ -2,7 +2,11 @@
 
 namespace App\Http\Livewire\Audit\Restaurants\Plates;
 
+use Throwable;
+
 use Livewire\Component;
+
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Audit\Restaurants\Restaurant;
 use App\Models\Audit\Restaurants\RestaurantMenu;
@@ -90,7 +94,11 @@ class PlateCreate extends Component
                 $this->reset('country_id');
             }
 
-            $this->createArray($this->rest);
+            try {
+                $this->createArray($this->rest);
+            } catch(Throwable $e) {
+                Log::error($e);
+            }
 
             $this->emit('alert', 'Se Agrego un Nuevo Articulo al Menu');
         }else
@@ -130,7 +138,8 @@ class PlateCreate extends Component
         }
     }
 
-    private function createArray($id){
+    private function createArray($id)
+    {
         $name  = preg_replace('/\s+/', '-',  strtolower(Restaurant::where('id', $id)->value('name')));
         $menus = RestaurantMenu::where('restaurant_id', $id)->get();
         $languagues = array(

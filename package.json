@@ -1,50 +1,68 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production"
-    },
-    "devDependencies": {
-        "@tailwindcss/forms": "^0.4.0",
-        "@tailwindcss/typography": "^0.5.2",
-        "alpinejs": "^3.9.0",
-        "autoprefixer": "^10.4.2",
-        "axios": "^0.26",
-        "browser-sync": "^2.27.7",
-        "browser-sync-webpack-plugin": "^0.1.0",
-        "laravel-mix": "^6.0.42",
-        "lodash": "^4.17.21",
-        "postcss": "^8.4.6",
-        "postcss-import": "^14.0.2",
-        "resolve-url-loader": "^5.0.0",
-        "sass": "^1.49.7",
-        "sass-loader": "^12.6.0",
-        "tailwindcss": "^3.0.23",
-        "webpack-cli": "^4.9.2"
-    },
-    "dependencies": {
-        "@fortawesome/fontawesome-free": "^6.0.0",
-        "bootstrap": "^5.1.3",
-        "bootstrap-colorpicker": "^3.4.0",
-        "bootstrap-slider": "^11.0.2",
-        "chart.js": "^3.7.1",
-        "chartjs-plugin-datalabels": "^2.0.0",
-        "commander": "^9.0.0",
-        "datatables.net": "^1.11.4",
-        "devextreme": "^21.2.5",
-        "icheck-bootstrap": "^3.0.1",
-        "jquery": "^3.6.0",
-        "jquery-knob-chif": "^1.2.13",
-        "jquery-mapael": "^2.2.0",
-        "jquery-mousewheel": "^3.1.13",
-        "jquery-ui-dist": "^1.13.1",
-        "jquery-validation": "^1.19.3",
-        "overlayscrollbars": "^1.13.1",
-        "sweetalert2": "^11.4.4"
-    }
+  "private": true,
+  "scripts": {
+    "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/typography": "^0.5.8",
+    "alpinejs": "^3.10.5",
+    "autoprefixer": "^10.4.13",
+    "axios": "^1.2",
+    "browser-sync": "^2.27.10",
+    "browser-sync-webpack-plugin": "^2.3.0",
+    "laravel-mix": "^6.0.49",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.19",
+    "postcss-import": "^15.1.0",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.56.2",
+    "sass-loader": "^13.2.0",
+    "tailwindcss": "^3.2.4",
+    "webpack-cli": "^5.0.1"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.2.1",
+    "bootstrap": "^5.2.3",
+    "bootstrap-colorpicker": "^3.4.0",
+    "bootstrap-slider": "^11.0.2",
+    "chart.js": "^4.0.1",
+    "chartjs-plugin-datalabels": "^2.1.0",
+    "commander": "^9.4.1",
+    "datatables.net": "^1.13.1",
+    "devextreme": "^22.2.3",
+    "icheck-bootstrap": "^3.0.1",
+    "jquery": "^3.6.1",
+    "jquery-knob-chif": "^1.2.13",
+    "jquery-mapael": "^2.2.0",
+    "jquery-mousewheel": "^3.1.13",
+    "jquery-ui-dist": "^1.13.2",
+    "jquery-validation": "^1.19.5",
+    "overlayscrollbars": "^2.0.1",
+    "sweetalert2": "^11.6.15"
+  },
+  "name": "fangorn",
+  "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\"></a></p>",
+  "version": "1.0.0",
+  "main": "tailwind.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NikitaIZ/fangorn.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NikitaIZ/fangorn/issues"
+  },
+  "homepage": "https://github.com/NikitaIZ/fangorn#readme"
 }

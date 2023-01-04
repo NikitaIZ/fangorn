@@ -5,7 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 
 use App\Models\Audit\Dolar;
-use App\Models\Audit\Xml\XmlForecastDate;
+
+use Goutte\Client;
 
 class DolarTask extends Command
 {
@@ -40,7 +41,7 @@ class DolarTask extends Command
      */
     public function handle()
     {
-       /* $array = XmlForecastDate::select('*')->get();
+        /* $array = XmlForecastDate::select('*')->get();
         foreach ($array as $value) {
             $dolar = Dolar::where('date', $value->date)->value('id');
             if ($dolar == null){
@@ -49,10 +50,18 @@ class DolarTask extends Command
             XmlForecastDate::where('id', $value->id)->update(['dolar_id' => $dolar]);
         }*/
 
+        $client = new Client();
+        $url = 'https://www.bcv.org.ve/';
+        $page = $client->request('GET', $url);
+        $texto = $page->filter(selector:'#dolar')->text();
+        $valor = substr($texto, 4);
+        $dolar = str_replace(",", ".", $valor);
+        $dolar = round($dolar, 2);
+
         $date = date("Y-m-d");
-        $dolar = Dolar::where('date', $date)->value('id');
-        if ($dolar == null){
-            $dolar = Dolar::orderByDesc('date')->value('daily_rate');
+        $check = Dolar::where('date', $date)->value('id');
+
+        if ($check == null){
             $XmlHistoryReport = new Dolar();
             $XmlHistoryReport->user_id    = 1;
             $XmlHistoryReport->daily_rate = $dolar;

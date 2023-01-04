@@ -1,6 +1,6 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic');
-@import '~@fortawesome/fontawesome-free/css/all.css';
+//@import '~@fortawesome/fontawesome-free/css/all.css';
 // OverlayScrollbars
 @import '~overlayscrollbars/css/OverlayScrollbars.css';
 // iCheck
@@ -11,3 +11,11 @@
 // Bootstrap
 // Already imported by AdminLTE
 @import 'style';
+
+$fa-font-path:"../webfonts";
+
+@import "fontawesome/scss/fontawesome.scss";
+@import "fontawesome/scss/solid.scss";
+@import "fontawesome/scss/brands.scss";
+
+

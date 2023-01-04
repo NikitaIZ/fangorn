@@ -7,6 +7,7 @@
                 </div>
                 @can('restaurant.edit')
                     @livewire('audit.restaurants.restaurant-create', [], key('create_restaurant'))
+                    @livewire('audit.restaurants.restaurant-percentage', [], key('percentage_restaurant'))
                 @endcan
             </div>
         </div>

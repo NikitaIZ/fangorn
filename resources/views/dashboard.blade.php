@@ -1306,7 +1306,7 @@
     <script type="text/javascript" src="js/guage.babel.js"></script>
 
     <script>
-        function financial(x) {
+        function financial(x){
             return Number.parseFloat(x).toFixed(2);
         };
         function show_form(){
@@ -1336,8 +1336,6 @@
 
         var report = {!! json_encode($data) !!};
         var date   = {!! json_encode($date) !!};
-
-        console.log(report["month"][0]["TOR"][0])
 
         var charts   = charts_array_minus(report);
         var types    = types_array(report);

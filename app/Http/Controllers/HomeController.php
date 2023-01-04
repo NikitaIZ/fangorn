@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
+use DateTimeZone;
+
+use Goutte\Client;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Audit\Dolar;
 use App\Models\Audit\Buffet;
@@ -14,42 +20,48 @@ use App\Models\Audit\Xml\XmlForecastReport;
 
 class HomeController extends Controller
 {
-    private function dolarToday(){
-        $arrContextOptions=array(
-            "ssl"=>array(
-                "verify_peer"=>false,
-                "verify_peer_name"=>false,
-            ),
-        );  
-        $json = file_get_contents("https://s3.amazonaws.com/dolartoday/data.json", false, stream_context_create($arrContextOptions));
-        $data = json_decode(utf8_encode($json));
-        return $data->USD;
+    private function dolarCentral($date)
+    {
+        $check = Dolar::where('date', $date)->value('id');
+        if ($check == null){
+            $client = new Client();
+            $url   = 'https://www.bcv.org.ve/';
+            $page  = $client->request('GET', $url);
+            $texto = $page->filter(selector:'#dolar')->text();
+            $valor = substr($texto, 4);
+            $dolar = str_replace(",", ".", $valor);
+            $dolar = round($dolar, 2);
+            $XmlHistoryReport = new Dolar();
+            $XmlHistoryReport->user_id    = Auth::user()->currentTeam->user_id;
+            $XmlHistoryReport->daily_rate = $dolar;
+            $XmlHistoryReport->date       = $date;
+            $XmlHistoryReport->save();
+            $this->updateDataJson($dolar);
+        }
     }
 
-    private function updateDataJson($dayli){
+    private function updateDataJson($dayli)
+    {
         $data['dolar'] = $dayli;
         $dataJson = json_encode($data, true);
-        file_put_contents('D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads\datos.json', $dataJson);
+        file_put_contents(config('app.ftp.local') . "\datos.json", $dataJson);
 
-        $ftp_server="ftp.wyndhamconcorde.com";
-        $ftp_user_name="pupjhhbnaibb";
-        $ftp_user_pass="wyndCCE.2022#%!";
-        $file = "D:\\ftps_sync\wp.wyndhamconcorde.com\wp-content\uploads\datos.json";//tobe uploaded
-        $remote_file = "public_html/wp/wp-content/uploads/datos.json";
+        $ftp_server = config('app.ftp.server');
+        $ftp_user_name = config('app.ftp.name');
+        $ftp_user_pass = config('app.ftp.pass');
+        $file = config('app.ftp.local') . "\datos.json";
+        $remote_file = config('app.ftp.remote') . "datos.json";
 
-        // set up basic connection
         $conn_id = ftp_connect($ftp_server);
         if($conn_id){
-            // login with username and password
             ftp_login($conn_id, $ftp_user_name, $ftp_user_pass);
             ftp_put($conn_id, $remote_file, $file, FTP_ASCII);
             ftp_close($conn_id);
         }
     }
 
-    private function allData($date, $allData = array())
+    private function allData($date, $allData = array(), $validate = false)
     {
-        $date_m = date("Y-m-d",  strtotime(date($date) . "- 2 days"));
         $allData["yesterday"] = $this->get_yesterday_data($date);
         $allData["today"]     = $this->get_today_data($date);
         $allData["week"]      = $this->get_week_data($date);
@@ -59,9 +71,6 @@ class HomeController extends Controller
         $allData["year"]      = $this->get_year_data($date);
         $allData["types"]     = $this->get_types_data($date, $date);
         $allData["buffet"]    = Buffet::get();
-
-        var_dump($allData["month"][0]);
-
         if ($allData["today"]["PDS"] >= 50){
             $allData["box"]["color"][0] = "small-box bg-warning";
             $allData["box"]["color"][1] = "small-box bg-danger";
@@ -69,7 +78,6 @@ class HomeController extends Controller
             $allData["box"]["color"][0] = "small-box bg-warning-off";
             $allData["box"]["color"][1] = "small-box bg-danger-off";
         }
-
         return $allData;
     }
 
@@ -677,9 +685,9 @@ class HomeController extends Controller
         return $week;
     }
 
-    private function get_month_data($date, $i = 0)
+    private function get_month_data($date_today, $i = 0)
     {
-        $date_real  = date("Y-m-d",  strtotime(date($date) . "- 1 days")); //31-08-22
+        $date_real  = date("Y-m-d",  strtotime(date($date_today) . "- 1 days")); //31-08-22
         $date_valid = date("Y-m-15",  strtotime(date($date_real))); //31-08-22
         $date_start = date("Y-m-02", strtotime(date($date_valid) . "+" . $i . "month"));//02-09-22
         $date_end   = date("Y-m-01", strtotime(date($date_valid) . "+". $i+1 ."month"));//01-10-22
@@ -737,7 +745,6 @@ class HomeController extends Controller
 
             $all['limit'] = count(array_column($history, 'OCC'));
         }else{
-            $date_today = date("Y-m-d");
             $date_starf = date("Y-m-01", strtotime($date_start));
             $date_end_f = date("Y-m-t",  strtotime($date_start));
 
@@ -905,7 +912,8 @@ class HomeController extends Controller
         return $all;
     }
 
-    private function get_history($date_start, $date_today, $avgs = 0){
+    private function get_history($date_start, $date_today)
+    {
         $dats = XmlHistoryReport::select('date')
                                 ->where('date', '>=', $date_start)
                                 ->where('date', '<=', $date_today)
@@ -979,7 +987,8 @@ class HomeController extends Controller
         return $ALL;
     }
 
-    private function get_forecast($date_today, $date_end_f, $avgs = 0){
+    private function get_forecast($date_today, $date_end_f)
+    {
         $id   = XmlForecastReport::orderBy('date', 'desc')->value('id');
 
         $dats = XmlForecastDate::select('date')
@@ -1083,18 +1092,30 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function index(){
-        $date = date("Y-m-d");
-        
-        $data = $this->allData($date);
-        $number = date("d/m/Y", strtotime($date));
-        $start = XmlHistoryReport::orderBy('date', 'DESC')->value('date');
-        $end   = XmlHistoryReport::orderBy('date', 'ASC') ->value('date');
-        $date = date("dmy",strtotime(date("d-m-Y")."- 1 days"));
+    public function index($validate = false)
+    {
+        $day = DateTime::createFromFormat('Y-m-d G:i:s', date('Y-m-d G:i:s'), new DateTimeZone('UTC'));
+        $day->setTimeZone(new DateTimeZone('America/Caracas'));
+        $today = $day->format('Y-m-d');
+        while ($validate == false) {
+            if (XmlHistoryReport::where('date', $today)->doesntExist()) {
+                $today = date("Y-m-d", strtotime($today . " - 1 days"));
+            }else{
+                $validate = true;
+            }
+        }
+        $this->dolarCentral($today);
+        $data   = $this->allData($today);
+        $number = date("d/m/Y", strtotime($today));
+        $start  = XmlHistoryReport::orderBy('date', 'DESC')->value('date');
+        $end    = XmlHistoryReport::orderBy('date', 'ASC') ->value('date');
+        $date   = date("dmy",strtotime($today."- 1 days"));
+
         return view('dashboard', compact('number', 'start', 'end','date','data'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $date = $request->date;
         $data = $this->allData($date);
         $number = date("d/m/Y", strtotime($date));

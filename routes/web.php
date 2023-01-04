@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Security\PersonalModel;
+use App\Http\Controllers\Security\PersonalController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,3 +31,20 @@ Route::get('send-mail', function () {
 
     dd("Email is Sent.");
 });
+
+
+
+
+
+
+
+
+
+Route::name("dinner")->group(function(){
+
+    Route::view("/dinner","reserves/dinner/index");
+
+
+});
+
+

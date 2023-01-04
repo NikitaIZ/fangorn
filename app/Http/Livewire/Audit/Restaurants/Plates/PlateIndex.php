@@ -180,7 +180,8 @@ class PlateIndex extends Component
         }
     }
 
-    private function updateDataJson($data, $name){
+    private function updateDataJson($data, $name)
+    {
         $dataJson = json_encode($data, true);
         file_put_contents(config('app.ftp.local') . "\menu-" . $name . ".json", $dataJson);
 
@@ -200,12 +201,14 @@ class PlateIndex extends Component
         }
     }
 
-    private function createArray($id){
+    private function createArray($id)
+    {
         $name  = preg_replace('/\s+/', '-',  strtolower(Restaurant::where('id', $id)->value('name')));
         $menus = RestaurantMenu::where('restaurant_id', $id)->get();
         $languagues = array(
             0 => 'es',
-            1 => 'en'
+            1 => 'en',
+            2 => 'ru'
         );
         foreach ($languagues as $value) {
             foreach ($menus as $menu) {
@@ -217,6 +220,10 @@ class PlateIndex extends Component
                     case 'en':
                         $list[$value][$menu->type][$menu->id]['coll'] = 'en_' . preg_replace('/\s+/', '_', strtolower($menu->name_en)) . '_' . $menu->id * rand(1,100);
                         $list[$value][$menu->type][$menu->id]['name'] = $menu->name_en;
+                    break;
+                    case 'ru':
+                        $list[$value][$menu->type][$menu->id]['coll'] = 'ru_' . preg_replace('/\s+/', '_', strtolower($menu->name_ru)) . '_' . $menu->id * rand(1,100);
+                        $list[$value][$menu->type][$menu->id]['name'] = $menu->name_ru;
                     break;
                 }
                 $list[$value][$menu->type][$menu->id]['description'] = $menu->description;
@@ -235,6 +242,10 @@ class PlateIndex extends Component
                                 case 'en':
                                     $list[$value][$menu->type][$menu->id]['choices'][$key1]['name'] = $choice->name_en;
                                     $list[$value][$menu->type][$menu->id]['choices'][$key1]['coll'] = 'en_' . preg_replace('/\s+/', '_', strtolower($choice->name_en));
+                                break;
+                                case 'ru':
+                                    $list[$value][$menu->type][$menu->id]['choices'][$key1]['name'] = $choice->name_ru;
+                                    $list[$value][$menu->type][$menu->id]['choices'][$key1]['coll'] = 'ru_' . preg_replace('/\s+/', '_', strtolower($choice->name_ru));
                                 break;
                             }
                             $plates = RestaurantMenuPlate::where('menu_id', $menu->id)->where('choice_id', $choice->id)->get();
@@ -266,6 +277,10 @@ class PlateIndex extends Component
                                     $list[$value][$menu->type][$menu->id]['choices'][$key]['name'] = $choice->name_en;
                                     $list[$value][$menu->type][$menu->id]['choices'][$key]['coll'] = 'en_' . preg_replace('/\s+/', '_', strtolower($choice->name_en));
                                 break;
+                                case 'ru':
+                                    $list[$value][$menu->type][$menu->id]['choices'][$key]['name'] = $choice->name_ru;
+                                    $list[$value][$menu->type][$menu->id]['choices'][$key]['coll'] = 'ru_' . preg_replace('/\s+/', '_', strtolower($choice->name_ru));
+                                break;
                             }
                             $list[$value][$menu->type][$menu->id]['choices'][$key]['plates'] = RestaurantMenuPlate::select('name_' . $value, 'description_' . $value, 'price', 'service')->where('menu_id', $menu->id)->where('choice_id', $choice->id)->where('status', true)->get()->toArray();
                         }
@@ -286,6 +301,10 @@ class PlateIndex extends Component
                                     case 'en':
                                         $list[$value][$menu->type][$menu->id]['countries'][$key]['name'] = $country->name_en;
                                         $list[$value][$menu->type][$menu->id]['countries'][$key]['coll'] = 'es_' . preg_replace('/\s+/', '_', strtolower($country->name_en));
+                                    break;
+                                    case 'ru':
+                                        $list[$value][$menu->type][$menu->id]['countries'][$key]['name'] = $country->name_ru;
+                                        $list[$value][$menu->type][$menu->id]['countries'][$key]['coll'] = 'ru_' . preg_replace('/\s+/', '_', strtolower($country->name_ru));
                                     break;
                                 }
                                 $list[$value][$menu->type][$menu->id]['countries'][$key]['plates'] = RestaurantMenuPlate::select('name_' . $value, 'description_' . $value, 'price', 'service')->where('menu_id', $menu->id)->where('country_id', $country->id)->where('status', true)->get()->toArray();

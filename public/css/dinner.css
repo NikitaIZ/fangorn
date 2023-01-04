@@ -1,0 +1,22 @@
+
+
+.search-box{
+    padding: 0 !important;
+    margin: 0 !important;
+    margin: 1rem 0 !important;
+    padding: 0.5rem 0 !important;
+}
+
+.search-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 3px solid #aaa;
+    margin: 1rem !important;
+}
+.search-input{
+    width: 100%;
+    border: none;
+    outline: none;
+    margin-left:  0.5rem;
+}

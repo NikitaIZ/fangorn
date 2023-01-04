@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Reserves;
 
+use DateTime;
+use DateTimeZone;
+
 use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
 
 use App\Models\Audit\Dolar;
@@ -11,7 +15,6 @@ use App\Models\Audit\Xml\XmlHistoryReport;
 use App\Models\Audit\Xml\XmlForecastData;
 use App\Models\Audit\Xml\XmlForecastDate;
 use App\Models\Audit\Xml\XmlForecastReport;
-use Illuminate\Support\Facades\Artisan;
 
 class RevenueManagerController extends Controller
 {
@@ -734,7 +737,9 @@ class RevenueManagerController extends Controller
     }
 
     public function index(){
-        $date   = date("Y-m-d");
+        $day    = DateTime::createFromFormat('Y-m-d G:i:s', date('Y-m-d G:i:s'), new DateTimeZone('UTC'));
+        $day->setTimeZone(new DateTimeZone('America/Caracas'));
+        $date   = $day->format('Y-m-d');
         $data   = $this->allData($date);
         $agent  = new \Jenssegers\Agent\Agent;
         $number = date("d/m/Y", strtotime($date));

@@ -48,7 +48,7 @@
                                     @endif
                                 </th>
                                 @can('restaurant.edit')
-                                    <th scope="col" colspan="3"></th>
+                                    <th scope="col" colspan="2"></th>
                                 @endcan
                             </tr>
                         </thead>
@@ -63,12 +63,9 @@
                                     </td>
                                     @can('roles.edit')
                                         <td width="10px">
-                                            <a class="btn btn-outline-success" href="{{route('roles.show', $role->id)}}"><i class="fa-solid fa-list-check"></i></a>
-                                        </td>
-                                        <td width="10px">
                                             <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#Modal{{ $role->id }}" wire:click='edit({{ $role }})'><i class="fa-solid fa-pen-to-square"></i></button>
                                             <div wire:ignore.self class="modal fade" id="Modal{{ $role->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="Modal{{ $role->id }}Label" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-dialog modal-dialog-centered modal-xl">
                                                     <div class="modal-content">
                                                         <div class="modal-header bg-info">
                                                             <h5 class="modal-title"><i class="fa-solid fa-edit fa-fw"></i> Editar {{ $role->name }}</h5>
@@ -90,6 +87,20 @@
                                                                             Por favor, rellene el campo Nombre
                                                                         </span>
                                                                     @enderror
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <h5>Permisos:</h5>
+                                                                    @foreach ($this->permissions as $key => $permission)
+                                                                        <div class="form-check form-check-inline col-12 col-sm-3">
+                                                                            @if ($permission['bool'] == true)
+                                                                                <input class="form-check-input" name="{{ $permission['name'] }}" type="checkbox" value="{{ $permission['id'] }}" wire:click="changePermission({{ $key }})" checked>
+                                                                                <label class="form-check-label" for="inlineCheckbox1">{{ $permission['name'] }}</label>
+                                                                            @else
+                                                                                <input class="form-check-input" name="{{ $permission['name'] }}" type="checkbox" value="{{ $permission['id'] }}" wire:click="changePermission({{ $key }})">
+                                                                                <label class="form-check-label" for="inlineCheckbox1">{{ $permission['name'] }}</label>
+                                                                            @endif
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
                                                             </div>
                                                         </div>

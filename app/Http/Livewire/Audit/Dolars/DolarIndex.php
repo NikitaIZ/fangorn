@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Audit\Dolar;
 use App\Models\Audit\Xml\XmlHistoryReport;
+
 use App\Models\Views\ViewDolar;
 
 class DolarIndex extends Component
@@ -97,7 +98,7 @@ class DolarIndex extends Component
     {
         if ($this->dolar->daily_rate && $this->dolar->date)
         {
-            $this->dolar->user_id = Auth::user()->currentTeam->id;
+            $this->dolar->user_id = Auth::user()->currentTeam->user_id;
             $this->dolar->save();
 
             $day = DateTime::createFromFormat('Y-m-d G:i:s', date('Y-m-d G:i:s'), new DateTimeZone('UTC'));

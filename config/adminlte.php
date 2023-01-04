@@ -317,6 +317,39 @@ return [
                 ],
             ],
         ],
+
+        [
+            'text'    => 'Seguridad',
+            'icon'    => 'fa-solid fa-shield',
+            'submenu' => [
+                [
+                    'can'   => 'test',
+                    'text'  => 'Personal',
+                    'icon'  => 'fa-solid fa-user',
+                    'route' => 'security.index',
+                ],
+                [
+                    'can'   => 'test',
+                    'text'  => 'Areas',
+                    'icon'  => 'fa-solid fa-layer-group',
+                    'route' => 'security.area.index',
+                ],
+                [
+                    'can'   => 'test',
+                    'text'  => 'Cargos',
+                    'icon'  => 'fa-solid fa-layer-group',
+                    'route' => 'security.position.index',
+                ],
+                [
+                    'can'   => 'test',
+                    'text'  => 'Escanear QR',
+                    'icon'  => 'fa-solid fa-qrcode',
+                    'route' => 'security.qrScanner.index',
+                ],
+                
+            ],
+        ],
+
         [
             'header' => 'NIVELES',
             'can'    => 'roles.index',

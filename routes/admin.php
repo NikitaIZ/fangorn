@@ -25,12 +25,19 @@ use App\Http\Controllers\Audit\RestaurantController;
 use App\Http\Controllers\Maintenance\TankController;
 
 use App\Http\Controllers\Roles\RoleController;
-use App\Http\Controllers\Roles\RolePermissionController;
 
 use App\Http\Controllers\Permissions\PermissionController;
 
 use App\Http\Controllers\Reserves\dinnersController;
 use App\Http\Controllers\Reserves\RevenueManagerController;
+use App\Http\Controllers\Security\PersonalController;
+
+use App\Http\Controllers\Security\Area as AreaController;
+use App\Http\Controllers\Security\Position as PositionController;
+use App\Http\Controllers\Security\PersonalIOLog;
+use App\Http\Controllers\Security\PersonalWarn;
+use App\Http\Controllers\Security\QrScanner;
+use App\Http\Controllers\Security\QRController;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,16 +111,128 @@ Route::resource('users', UserController::class);
 
 Route::resource('roles', RoleController::class);
 
-Route::resource('roles/permissions', RolePermissionController::class)->names([
-                                                                                'index'   => 'roles.permissions.index',
-                                                                                'create'  => 'roles.permissions.create',
-                                                                                'store'   => 'roles.permissions.store',
-                                                                                'destroy' => 'roles.permissions.destroy',
-                                                                                'update'  => 'roles.permissions.update',
-                                                                                'edit'    => 'roles.permissions.edit',
-                                                                                'show'    => 'roles.permissions.show'
-                                                                            ]);
 Route::resource('permissions', PermissionController::class);
+
+/*Paginas del departamento de Seguridad. */
+
+
+//Agrega el prefijo security a todas las rutas registradas.                                                                            
+Route::prefix("security")->group(function(){
+
+    //agrega el prefijo security. a todos los nombres de las rutas.
+    Route::name("security.")->group(function(){
+
+        //vistas
+        Route::view("/personal","security/personal/index")->name("index");
+        Route::get("/generatedQR/{personal_id}",[QRController::class,"generatePersonalQr"])->name("qr.get");
+
+        Route::get("/personal/{personal_id}",[PersonalController::class,"show"])->name("personal.get");
+
+
+        
+        Route::name("personal.register.")->group(function(){
+            Route::get("/register",[PersonalController::class,"store_view"])->name("get");
+            Route::post("/register",[PersonalController::class,"store"])->name("post");
+        });
+
+        Route::name("personal.update.")->group(function(){
+            Route::get("/update/{personal_id}",[PersonalController::class,"update_show"])->name("get");
+            Route::post("/update/{personal_id}",[PersonalController::class,"update"])->name("post");
+        });
+
+        Route::name("personal.delete.")->group(function(){
+            Route::get("/delete/{personal_id}",[PersonalController::class,"delete_show"])->name("get");
+            Route::post("/delete/{personal_id}",[PersonalController::class,"delete"])->name("post");
+        });
+
+
+        Route::prefix("area")->group(function(){
+
+            Route::name("area.")->group(function(){
+               Route::view("/","security/area/index")->name("index"); 
+                
+               Route::name("register.")->group(function(){
+                    Route::view("/register","security/area/register")->name("get");
+                    Route::post("/register",[AreaController::class,"store"])->name("post");
+               });
+
+               Route::name("update.")->group(function(){
+
+                    Route::get("/update/{area_id}",[AreaController::class,"update_show"])->name("get");
+                    Route::post("/update/{area_id}",[AreaController::class,"update"])->name("post");
+               });
+
+               Route::name("delete.")->group(function(){
+                    Route::get("/delete/{area_id}",[AreaController::class,"delete_show"])->name("get");
+                    Route::post("/delete/{area_id}",[AreaController::class,"delete"])->name("post");
+                });
+            
+            });
+        });
+
+        Route::prefix("position")->group(function(){
+            Route::name("position.")->group(function(){
+                Route::view("/","security/position/index")->name("index");
+
+                Route::name("register.")->group(function(){
+                    Route::view("/register","security/position/register")->name("get");
+                    Route::post("/register",[PositionController::class,"store"])->name("post");
+                });
+                
+                Route::name("update.")->group(function(){
+
+                    Route::get("/update/{position_id}",[PositionController::class,"update_show"])->name("get");
+                    Route::post("/update/{position_id}",[PositionController::class,"update"])->name("post");
+               });
+
+               Route::name("delete.")->group(function(){
+                Route::get("/delete/{position_id}",[PositionController::class,"delete_show"])->name("get");
+                Route::post("/delete/{position_id}",[PositionController::class,"delete"])->name("post");
+            });
+
+
+            });
+        });
+
+        Route::prefix("personal_io_log")->group(function(){
+            Route::name("personal_io_log.")->group(function(){
+
+                Route::name("register.")->group(function(){
+                    Route::get("/register/{personal_id}",[PersonalIOLog::class,"store_view"])->name("get");
+                    Route::post("/register/{personal_id}",[PersonalIOLog::class,"store"])->name("post");
+                });
+                
+            });
+        });
+        
+        Route::prefix("personal_warn")->group(function(){
+            Route::name("personal_warn.")->group(function(){
+
+                Route::name("register.")->group(function(){
+                    Route::get("/register/{personal_id}",[PersonalWarn::class,"store_view"])->name("get");
+                    Route::post("/register/{personal_id}",[PersonalWarn::class,"store"])->name("post");
+                });
+                
+            });
+        });
+        
+        Route::prefix("qrScanner")->group(function(){
+            Route::name("qrScanner.")->group(function(){
+
+                Route::view("/","security/qrScanner/index")->name("index");
+                
+                Route::get("/QR/{encryptedData}",[QRController::class,"scan"])->name("get");
+            });
+        });
+    
+    });
+
+});
+
+
+
+
+Route::get("/token",[JWTController::class,"generateToken"]);
 
 /** Pagina de pruebas **/ 
 

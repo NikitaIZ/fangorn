@@ -129,7 +129,8 @@ class MenuIndex extends Component
         }
     }
 
-    private function updateDataJson($data, $name){
+    private function updateDataJson($data, $name)
+    {
         $dataJson = json_encode($data, true);
         file_put_contents(config('app.ftp.local') . "\menu-" . $name . ".json", $dataJson);
 
@@ -149,7 +150,8 @@ class MenuIndex extends Component
         }
     }
 
-    private function createArray($id){
+    private function createArray($id)
+    {
         $name  = preg_replace('/\s+/', '-',  strtolower(Restaurant::where('id', $id)->value('name')));
         $menus = RestaurantMenu::where('restaurant_id', $id)->get();
         $languagues = array(

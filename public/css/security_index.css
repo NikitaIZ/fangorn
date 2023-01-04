@@ -1,0 +1,132 @@
+*{
+    outline: none;
+}
+
+.search-container{
+    width: fit-content;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.3rem 1rem;
+    margin: 0.4rem 0.5rem;
+    border-radius: 0.4rem;
+    border: 1.4px solid #aaaa !important;
+    box-shadow: 0px 0px 3px #aaa,0px 0px 3px #aaa;
+}
+
+
+
+.search-input{
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    margin-left: 0.5rem;
+}
+
+.table-link{
+    color: black;
+}
+
+.table-link:hover{
+    color: royalblue;
+}
+
+
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+
+
+/*
+
+Circulos para el estado del personal.
+*/
+.status-circle{
+    width: 24px;
+    height: 24px;
+    border: 2px solid;
+}
+
+.status-circle-positive-1{
+    background-color: rgba(28, 196, 3, 0.667);
+    box-shadow: 0px 0px 3px rgba(28, 196, 3, 0.667);
+    border-color: rgba(28, 196, 3, 0.667);
+}
+
+.status-circle-positive-2{
+    background-color: rgba(13, 82, 2, 0.667);
+    box-shadow: 0px 0px 3px rgba(13, 82, 2, 0.667);
+    border-color: rgba(13, 82, 2, 0.667);
+}
+
+
+.status-circle-medium-1{
+    background-color: rgba(219, 147, 4, 0.667);
+    box-shadow: 0px 0px 3px rgba(219, 147, 4, 0.667);
+    border-color: rgba(219, 147, 4, 0.667);
+}
+
+.status-circle-medium-2{
+    background-color: rgba(125, 84, 2, 0.667);
+    box-shadow: 0px 0px 3px rgba(125, 84, 2, 0.667);
+    border-color: rgba(125, 84, 2, 0.667);
+}
+
+.status-circle-negative-1{
+    background-color: rgba(211, 14, 7, 0.667);
+    box-shadow: 0px 0px 3px rgba(211, 14, 7, 0.667);
+    border-color: rgba(211, 14, 7, 0.667);
+}
+
+
+
+/*
+Caja de busqueda
+
+*/
+.search-box{
+    background-color: rgba(170, 170, 170, 0.613);
+    padding: 0 !important;
+}
+.search-icon-box{
+    border-right: 1px solid #aaa;
+    padding: 0.8rem 1rem !important;
+}
+.search-input{
+    padding: 0rem 0.8rem !important;
+    color: black;
+    font-size: 1rem;
+}
+
+.add-button-box{
+    padding: 0.8rem 1rem !important;
+}
+.filter-button{
+    padding: 0.8rem 1rem !important;
+    outline: none;
+    font-size: 1rem !important;
+}
+
+
+.card-grid{
+    margin-top: 3rem;
+    margin-left: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,auto));
+    justify-content: center;
+    gap: 20px;
+    align-items: baseline;
+    border: 2px solid #aaa;
+    box-shadow: 0px 0px 3px #aaa,0px 0px 3px #aaa;
+    border-radius: 0.4rem;
+    padding: 1rem 0;
+    background: #aaaa;
+}

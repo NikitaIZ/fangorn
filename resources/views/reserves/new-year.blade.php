@@ -1,260 +1,173 @@
 @extends('adminlte::page')
 
-@section('title', 'Buffet')
+@section('title', 'Navidad')
+
+@section('css')
+    <style>
+        .btn-wyndham {
+            color: rgb(255, 255, 255);
+            background-color: rgb(12, 67, 125);
+            border-color: rgb(51, 111, 175);
+            box-shadow: none;
+        }
+
+        .btn-wyndham:hover {
+            color: rgb(255, 255, 255);
+            background-color: rgb(51, 111, 175);
+            border-color: rgb(131, 179, 230);
+        }
+
+        .box-1{
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+
+        .father {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .child {
+            width: auto;
+        }
+
+        .solid-border {
+            border-bottom: solid 2px #c88e3a;
+        }
+
+        .bg-gold {
+            background-color: #c88e3a!important;
+            color: white;
+        }
+
+        .btn-outline-gold {
+            color: #c88e3a;
+            border-color: #c88e3a;
+        }
+
+        .btn-outline-gold:hover {
+            color: #fff;
+            background-color: #c88e3a;
+            border-color: #c88e3a;
+        }
+
+        .pagination > .active > a,
+        .pagination > .active > a:focus,
+        .pagination > .active > a:hover,
+        .pagination > .active > span,
+        .pagination > .active > span:focus,
+        .pagination > .active > span:hover {
+            background-color: #111314 !important;
+            border-color: #717a83 !important;
+            color: #fafcff !important;
+        }
+
+        .page-link {
+            position: relative;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin-left: -1px;
+            line-height: 1.25;
+            color: #343a40;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+        }
+
+        .page-link:hover {
+            z-index: 2;
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #4a4c4e;
+            border-color: #dee2e6;
+        }
+
+        dl, ol, ul {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+@stop
 
 @section('content_header')
-    <button id="button1" onclick="show_on_hold()" class="btn btn-warning float-right">
-        En Espera
-    </button>
-    <button id="button2" onclick="show_on_completed()" class="invisible d-none">
-        Completos
-    </button>
-    <h1>Cena de Año Nuevo</h1>
+    <div class="row mb-2">
+        <div class="col-12">
+            <ul class="nav nav-tabs justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="">Reservas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('reserves.dinners.index') }}">Fiestas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown"  href="#" role="button" aria-expanded="false">Año Nuevo</a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ route('reserves.dinners.christmas') }}">Navidad</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
 @stop
 
 @section('content')
-    @if (session('info'))
-        <div class="alert alert-success">
-            <strong>{{ session('info') }}</strong>
-        </div>
-    @endif
-    <div id="infoCompleted" class="">
-        <div class="row py-2">
-            <div class="col-lg-3 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-money-bill-wave"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Total</span>
-                        <span class="info-box-number">
-                            {{ $total["completed"][0] }}$
-                            <small></small>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success elevation-1"><i class="fas fa-file-invoice-dollar"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Pedidos</span>
-                        <span class="info-box-number">
-                            {{ $total["completed"][1] }}
-                            <small></small>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-male"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Adultos</span>
-                        <span class="info-box-number">
-                            {{ $total["completed"][2] }}
-                            <small></small>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-child"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Niños</span>
-                        <span class="info-box-number">
-                            {{ $total["completed"][3] }}
-                            <small></small>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <!--<div class="card-header">
-            </div>-->
-            @if (count($data))
-                <div class="card-body">
-                    <div class="table-responsive"> 
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>CLIENTE</th>
-                                    <th>ADULTOS</th>
-                                    <th>NIÑOS</th>
-                                    <th>SUBTOTAL</th>
-                                    <th>CUPON</th>
-                                    <th>TOTAL</th>
-                                    <th>PRECIO</th>
-                                    <th>FECHA</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($data as $dato)
-                                    @if ($dato["status"] == "wc-completed")
-                                        <tr>
-                                            <td>{{ $dato["orderId"] }}</td>
-                                            <td>{{ $dato["cliente"] }}</td>
-                                            <td>{{ $dato["adultos"] }}</td>
-                                            @if ($dato["niños"] != null)
-                                                <td>{{ $dato["niños"] }}</td>
-                                            @else
-                                                <td>0</td>
-                                            @endif
-                                            <td>{{ $dato["subtotal"] }}$</td>
-                                            @if ($dato["cupon"] != null)
-                                                <td> -{{ $dato["cupon"] }}$</td>
-                                            @else
-                                                <td>Ninguno</td>
-                                            @endif
-                                            <td>{{ $dato["total"] }}$</td>
-                                            <td>{{ $dato["precio"] }}$</td>
-                                            <td>{{ $dato["fecha"] }}</td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!--<div class="card-footer">
-                </div>-->
-            @else
-                <div class="card-body">
-                    <strong>
-                        No Hay Reservas Para Navidad
-                    </strong>
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <div id="inOnHold" class="invisible d-none">
-        <div class="row py-2">
-            <div class="col-lg-3 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-money-bill-wave"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Total</span>
-                        <span class="info-box-number">
-                            {{ $total["hold"][0] }}$
-                            <small></small>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-file-invoice-dollar"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Pedidos</span>
-                        <span class="info-box-number">
-                            {{ $total["hold"][1] }}
-                            <small></small>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-male"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Adultos</span>
-                        <span class="info-box-number">
-                            {{ $total["hold"][2] }}
-                            <small></small>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="info-box">
-                    <span class="info-box-icon bg-secondary elevation-1"><i class="fas fa-child"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Niños</span>
-                        <span class="info-box-number">
-                            {{ $total["hold"][3] }}
-                            <small></small>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <!--<div class="card-header">
-            </div>-->
-            @if (count($data))
-                <div class="card-body">
-                    <div class="table-responsive"> 
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>CLIENTE</th>
-                                    <th>ADULTOS</th>
-                                    <th>NIÑOS</th>
-                                    <th>SUBTOTAL</th>
-                                    <th>CUPON</th>
-                                    <th>TOTAL</th>
-                                    <th>PRECIO</th>
-                                    <th>FECHA</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($data as $dato)
-                                    @if ($dato["status"] == "wc-on-hold")
-                                        <tr>
-                                            <td>{{ $dato["orderId"] }}</td>
-                                            <td>{{ $dato["cliente"] }}</td>
-                                            <td>{{ $dato["adultos"] }}</td>
-                                            @if ($dato["niños"] != null)
-                                                <td>{{ $dato["niños"] }}</td>
-                                            @else
-                                                <td>0</td>
-                                            @endif
-                                            <td>{{ $dato["subtotal"] }}$</td>
-                                            @if ($dato["cupon"] != null)
-                                                <td> -{{ $dato["cupon"] }}$</td>
-                                            @else
-                                                <td>Ninguno</td>
-                                            @endif
-                                            <td>{{ $dato["total"] }}$</td>
-                                            <td>{{ $dato["precio"] }}$</td>
-                                            <td>{{ $dato["fecha"] }}</td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!--<div class="card-footer">
-                </div>-->
-            @else
-                <div class="card-body">
-                    <strong>
-                        No Hay Reservas Para Navidad
-                    </strong>
-                </div>
-            @endif
-        </div>
+    <div class="row justify-content-center">
+        @livewire('reserves.new-year.new-year-index')
     </div>
 @stop
 
 @section('js')
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-        function show_on_hold(){
-            infoCompleted.className = "invisible d-none";
-            inOnHold.className      = "";
-            button1.className       = "invisible d-none"
-            button2.className       = "btn btn-success float-right"
-        };
-    
-        function show_on_completed(){     
-            infoCompleted.className = "";
-            inOnHold.className      = "invisible d-none";
-            button1.className       = "btn btn-warning float-right"
-            button2.className       = "invisible d-none"
-        };
+        this.livewire.on('alert', function(message){
+            Swal.fire(
+                'Buen trabajo!',
+                message,
+                'success'
+            )
+        });
+
+        this.livewire.on('error', function(message){
+            Swal.fire(
+                'Oh no!',
+                message,
+                'error'
+            )
+        });
+
+        this.livewire.on('deleteReserve', orderId => {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger mr-2'
+                },
+                buttonsStyling: false
+            });
+
+            swalWithBootstrapButtons.fire({
+                title: '¿Está seguro?',
+                text: "No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, bórralo.',
+                cancelButtonText: '¡No, cancela!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    livewire.emitTo('reserves.new-year.new-year-index', 'delete', orderId);
+                    swalWithBootstrapButtons.fire(
+                        'Eliminado!',
+                        'Su archivo ha sido eliminado.',
+                        'success'
+                    )
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    swalWithBootstrapButtons.fire(
+                        'Cancelado',
+                        'Su archivo está a salvo :)',
+                        'error'
+                    )
+                }
+            })
+        });
     </script>
 @stop
