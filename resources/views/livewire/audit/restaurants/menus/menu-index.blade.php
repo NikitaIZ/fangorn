@@ -80,9 +80,11 @@
                                             <td scope="row" class="align-middle">{{ $menu_option->name_ru }}</td>
                                         @break
                                     @endswitch
-                                    <td width="10px" class="align-middle">
-                                        <a class="btn btn-outline-primary" href="{{ route('audit.plates.index', ['lang' => $this->lang, 'rest' => $this->rest->id, 'id' => $menu_option->id]) }}"><i class="fa-solid fa-hand-pointer"></i></a>
-                                    </td>
+                                    @can('plate.show')
+                                        <td width="10px" class="align-middle">
+                                            <a class="btn btn-outline-primary" href="{{ route('audit.restaurants.plates.index', ['lang' => $this->lang, 'rest' => $this->rest->id, 'id' => $menu_option->id]) }}"><i class="fa-solid fa-hand-pointer"></i></a>
+                                        </td>
+                                    @endcan
                                     @can('menu.edit')
                                         <td width="10px" class="align-middle">
                                             <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#Modal{{ $menu_option->id }}" wire:click='edit({{ $menu_option }})'><i class="fa-solid fa-pen-to-square"></i></button>

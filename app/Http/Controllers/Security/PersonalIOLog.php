@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Security\Personal as PersonalModel;
+use App\Models\Security\PersonalModel;
 use App\Models\Security\PersonalIOLog as PersonalIOLogModel;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +20,12 @@ class PersonalIOLog extends Controller
      *
      * @var string
      */
+
+
+     public function __construct()
+     {
+         $this->middleware('can:personal.create_io_log')->only('store_view', 'store');
+     }
 
     public function store_view($personal_id){
         

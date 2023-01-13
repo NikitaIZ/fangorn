@@ -1,7 +1,7 @@
 <div class="col-lg-10 col-12">
     <div class="card" style="box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
         <div class="card-header bg-info">
-            <div class="input-group pt-3 pb-2">
+            <div class="d-flex bd-highlight">
                 <div class="flex-grow-1 bd-highlight pr-2">
                     <input wire:model="search" class="form-control" placeholder="Ingrese Nombre" aria-label="Ingrese Nombre">
                 </div>
@@ -29,8 +29,11 @@
                                         <i class="fa-solid fa-sort fa-fw float-right mt-1"></i>
                                     @endif
                                 </th>
+                                @can('menu.show')
+                                    <th scope="col"></th>
+                                @endcan
                                 @can('restaurant.edit')
-                                    <th scope="col" colspan="3"></th>
+                                    <th scope="col" colspan="2"></th>
                                 @endcan
                             </tr>
                         </thead>
@@ -38,9 +41,11 @@
                             @foreach ($restaurants as $restaurant)
                                 <tr>
                                     <td scope="row">{{ $restaurant->name }}</td>
-                                    <td class="text-center align-middle" width="10px">
-                                        <a class="btn btn-outline-primary" href="{{ route('audit.menus.index', ['lang' => 'es', 'id' => $restaurant->id]) }}"><i class="fa-solid fa-hand-pointer"></i></a>
-                                    </td>
+                                    @can('menu.show')
+                                        <td class="text-center align-middle" width="10px">
+                                            <a class="btn btn-outline-primary" href="{{ route('audit.restaurants.menus.index', ['lang' => 'es', 'id' => $restaurant->id]) }}"><i class="fa-solid fa-hand-pointer"></i></a>
+                                        </td>
+                                    @endcan
                                     @can('restaurant.edit')
                                         <td width="10px" class="align-middle">
                                             <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#Modal{{ $restaurant->id }}" wire:click='edit({{ $restaurant }})'><i class="fa-solid fa-pen-to-square"></i></button>

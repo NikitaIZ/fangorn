@@ -8,6 +8,11 @@ use App\Models\Audit\Restaurants\Restaurant;
 
 class MenuController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:menu.show')->only('index');
+    }
+
     public function index($lang, $id){
         $restaurant      = Restaurant::where('id', $id)->first();
         $restaurant_list = Restaurant::whereNotIn('id', [$restaurant->id])->get();

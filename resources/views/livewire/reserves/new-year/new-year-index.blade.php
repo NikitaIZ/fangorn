@@ -13,7 +13,6 @@
             </button>
         @endif
         <h2 class="text-center">Cena Año Nuevo</h2>
-        
     </div>
     <div class="col-lg-3 col-6">
         <div class="info-box">
@@ -177,7 +176,9 @@
                                         @endif
                                     </th>
                                     <th scope="col"></th>
-                                    <!--<th scope="col" colspan="2"></th>-->
+                                    @can('new_year.edit')
+                                        <th scope="col"></th>
+                                    @endcan
                                 </tr>
                             </thead>
                             <tbody class="table-light">
@@ -351,9 +352,11 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <!--<td width="10px" class="align-middle">
-                                                <button class="btn btn-outline-danger" wire:click="$emit('deleteReserve', {{ $booking->order_id }})"><i class="fa-solid fa-trash-can"></i></button>
-                                            </td>-->
+                                            @can('new_year.edit')
+                                                <td width="10px" class="align-middle">
+                                                    <button class="btn btn-outline-danger" wire:click="$emit('deleteReserve', {{ $booking->order_id }})"><i class="fa-solid fa-trash-can"></i></button>
+                                                </td>
+                                            @endcan
                                         </tr>
                                     @endif
                                 @endforeach

@@ -91,7 +91,7 @@
                         <div class="icon">
                             <i class="fas fa-dollar-sign"></i>
                         </div>
-                        @can('dolar.index')
+                        @can('dolar.show')
                             <a href="{{ route('audit.dolars.index') }}" class="small-box-footer">
                                 Actualizar <i class="fas fa-fw fa-arrow-circle-right"></i>
                             </a>

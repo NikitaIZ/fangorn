@@ -24,7 +24,7 @@ class ReportTankController extends Controller
     public function store(Request $request){
         $reports = new TankReport();
 
-        $reports->user_id     = Auth::user()->currentTeam->id;
+        $reports->user_id     = Auth::user()->currentTeam->user_id;
         $reports->tank_id     = $request->tanque;
         $reports->liters      = $request->litros;
         $reports->description = $request->descripcion;

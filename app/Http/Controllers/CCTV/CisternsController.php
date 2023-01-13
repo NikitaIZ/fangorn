@@ -10,15 +10,4 @@ class CisternsController extends Controller
     public function index(){
         
     }
-
-    public function create(Request $request){
-    
-    }
-
-    public function store(){
-    
-    }
-
-    public function show(){
-    }
 }

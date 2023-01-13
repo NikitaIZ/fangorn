@@ -256,30 +256,30 @@ return [
         ],
         ['header' => 'DEPARTAMENTOS'],
         [
-            'can'     => 'xmls.index',
+            'can'     => 'au_reports.show',
             'text'    => 'Auditoria',
             'icon'    => 'fas fa-fw fa-calculator',
             'submenu' => [
                 [
-                    'can'   => 'xmls.index',
+                    'can'   => 'au_reports.show',
                     'text'  => 'Reportes',
                     'icon'  => 'fa-solid fa-fw fa-book',
                     'route' => 'audit.reports.index',
                 ],
                 [
-                    'can'   => 'dolar.index',
+                    'can'   => 'dolar.show',
                     'text'  => 'Tasas de Cambio',
                     'icon'  => 'fas fa-fw fa-hand-holding-usd',
                     'route' => 'audit.dolars.index',
                 ],
                 [
-                    'can'   => 'restaurant.index',
+                    'can'   => 'restaurant.show',
                     'text'  => 'Restaurantes',
                     'icon'  => 'fa-solid fa-fw fa-utensils',
                     'route' => 'audit.restaurants.index',
                 ],
                 [
-                    'can'   => 'buffet.index',
+                    'can'   => 'buffet.show',
                     'text'  => 'Buffet',
                     'icon'  => 'fa-solid fa-fw fa-file-invoice-dollar',
                     'route' => 'audit.buffets.index',
@@ -287,61 +287,92 @@ return [
             ],
         ],
         [
-            'can'     => 'revenue_manager.index',
+            'can'     => 'revenue_manager',
             'text'    => 'Reservas',
             'icon'    => 'fas fa-fw fa-address-book',
             'submenu' => [
                 [
-                    'can'   => 'revenue_manager.index',
+                    'can'   => 'revenue_manager',
                     'text'  => 'Rev Mgr',
                     'icon'  => 'fas fa-fw fa-book-open',
                     'route' => 'reserves.manager.index',
                 ],
                 [
-                    'can'   => 'test',
-                    'text'  => 'Reporte',
-                    'icon'  => 'fas fa-fw fa-book-open',
+                    'can'   => 'dinners',
+                    'text'  => 'Fiestas',
+                    'icon'  => 'fas fa-fw fa-gifts',
                     'route' => 'reserves.dinners.index',
                 ],
                 [
-                    'can'   => 'test',
+                    'can'   => 'christmas.show',
                     'text'  => 'Navidad',
                     'icon'  => 'fas fa-fw fa-gift',
                     'route' => 'reserves.dinners.christmas',
                 ],
                 [
-                    'can'   => 'test',
+                    'can'   => 'new_year.show',
                     'text'  => 'Año Nuevo',
                     'icon'  => 'fas fa-fw fa-glass-cheers',
                     'route' => 'reserves.dinners.newYear',
                 ],
             ],
         ],
-
         [
+            'can'     => 'marketing',
+            'text'    => 'Marketing',
+            'icon'    => 'fa-solid fa-chart-simple',
+            'submenu' => [
+                [
+                    'can'   => 'marketing',
+                    'text'  => 'Graficas',
+                    'icon'  => 'fa-solid fa-fw fa-chart-area',
+                    'route' => 'marketing.index',
+                ],
+                [
+                    'can'   => 'mk_reports.show',
+                    'text'  => 'Reportes',
+                    'icon'  => 'fa-solid fa-fw fa-box-archive',
+                    'route' => 'marketing.reports.index',
+                ],
+                [
+                    'can'   => 'hotels.show',
+                    'text'  => 'Hoteles',
+                    'icon'  => 'fa-solid fa-fw fa-tree-city',
+                    'route' => 'marketing.hotels.index',
+                ],
+                [
+                    'can'   => 'hotels.show',
+                    'text'  => 'Data',
+                    'icon'  => 'fa-solid fa-database',
+                    'route' => 'marketing.data.index',
+                ],
+            ],
+        ],
+        [
+            'can'     => 'personal.show',
             'text'    => 'Seguridad',
             'icon'    => 'fa-solid fa-shield',
             'submenu' => [
                 [
-                    'can'   => 'test',
+                    'can'   => 'personal.show',
                     'text'  => 'Personal',
                     'icon'  => 'fa-solid fa-user',
                     'route' => 'security.index',
                 ],
                 [
-                    'can'   => 'test',
+                    'can'   => 'personal.area.show',
                     'text'  => 'Areas',
                     'icon'  => 'fa-solid fa-layer-group',
                     'route' => 'security.area.index',
                 ],
                 [
-                    'can'   => 'test',
+                    'can'   => 'personal.position.show',
                     'text'  => 'Cargos',
                     'icon'  => 'fa-solid fa-layer-group',
                     'route' => 'security.position.index',
                 ],
                 [
-                    'can'   => 'test',
+                    'can'   => 'personal.qr',
                     'text'  => 'Escanear QR',
                     'icon'  => 'fa-solid fa-qrcode',
                     'route' => 'security.qrScanner.index',
@@ -349,35 +380,34 @@ return [
                 
             ],
         ],
-
         [
             'header' => 'NIVELES',
-            'can'    => 'roles.index',
+            'can'    => 'users.show',
         ],
         [
-            'can'   => 'roles.create',
-            'text'  => 'Asignar',
+            'can'   => 'users.show',
+            'text'  => 'Usuarios',
             'route' => 'users.index',
+            'icon'  => 'fas fa-fw fa-users',
+        ],
+        [
+            'can'   => 'roles.show',
+            'text'  => 'Roles',
+            'route' => 'roles.index',
             'icon'  => 'fas fa-fw fa-id-card-alt',
         ],
         [
-            'can'   => 'roles.index',
-            'text'  => 'Roles',
-            'route' => 'roles.index',
-            'icon'  => 'fas fa-fw fa-crown',
-        ],
-        [
-            'can'   => 'permissions.index',
+            'can'   => 'permissions.show',
             'text'  => 'Permisos',
             'route' => 'permissions.index',
             'icon'  => 'fas fa-fw fa-clipboard-list',
         ],
         [
-            'can'    => 'profile.show',
+            'can'    => 'profile',
             'header' => 'AJUSTES'
         ],
         [
-            'can'   => 'profile.show',
+            'can'   => 'profile',
             'text'  => 'profile',
             'route' => 'profile.show',
             'icon'  => 'fas fa-fw fa-user',
@@ -394,8 +424,8 @@ return [
                     'icon'    => 'fas fa-fw fa-exchange-alt',
                 ],
                 [
-                    'can'   => 'teams.create',
-                    'text'  => 'Crear Nuevo',
+                    'can'   => 'teams.edit',
+                    'text'  => 'Crear Nuevo Equipo',
                     'key'   => 'create_team',
                     'icon'  => 'fas fa-fw fa-plus-circle',
                     'route' => 'teams.create',
@@ -403,7 +433,7 @@ return [
             ],
         ],
         [
-            'can'   => 'register.index',
+            'can'   => 'register',
             'text'  => 'Nuevo Usuario',
             'icon'  => 'fas fa-fw fa-user-plus',
             'route' => 'register.index',

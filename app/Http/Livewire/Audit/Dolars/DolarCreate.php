@@ -7,9 +7,10 @@ use DateTimeZone;
 
 use Livewire\Component;
 
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\Audit\Dolar;
 use App\Models\Audit\Xml\XmlHistoryReport;
-use Illuminate\Support\Facades\Auth;
 
 class DolarCreate extends Component
 {
@@ -27,7 +28,7 @@ class DolarCreate extends Component
             $validate = Dolar::where('date', $this->date)->value('id');
             if ($validate == null) {
                 Dolar::create([
-                    'user_id'    => Auth::user()->currentTeam->id,
+                    'user_id'    => Auth::user()->currentTeam->user_id,
                     'daily_rate' => $this->daily_rate,
                     'date'       => $this->date,
                 ]);

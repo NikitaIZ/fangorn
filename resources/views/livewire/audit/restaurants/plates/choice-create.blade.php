@@ -8,7 +8,7 @@
                         <h5 class="modal-title"><i class="fa-regular fa-rectangle-list fa-fw"></i> Añadir Opción</h5>
                         <button class="btn btn-danger btn-sm fw-bold float-right" type="button" wire:click='change'><i class="fa-solid fa-trash-can"></i></button>
                     @else
-                        <h5 class="modal-title"><i class="fa-regular fa-rectangle-list fa-fw"></i> Añadir Opción</h5>
+                        <h5 class="modal-title"><i class="fa-regular fa-rectangle-list fa-fw"></i> Eliminar Opción</h5>
                         <button class="btn btn-light btn-sm fw-bold float-right" type="button" wire:click='change'><i class="fa-solid fa-plus"></i></button>
                     @endif
                 </div>

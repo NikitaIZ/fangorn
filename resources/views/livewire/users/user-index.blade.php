@@ -69,7 +69,7 @@
                                         <i class="fa-solid fa-sort fa-fw float-right mt-1"></i>
                                     @endif
                                 </th>
-                                @can('dolar.edit')
+                                @can('users.edit')
                                     <th scope="col"></th>
                                 @endcan
                             </tr>
@@ -89,7 +89,7 @@
                                     <td class="text-center align-middle">
                                         {{ $user->role }}
                                     </td>
-                                    @can('dolar.edit')
+                                    @can('users.edit')
                                         <td width="10px" class="align-middle">
                                             <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#Modal{{$user->id}}" wire:click='edit({{$user->id}})'><i class="fa-solid fa-pen-to-square"></i></button>
                                             <div wire:ignore.self class="modal fade" id="Modal{{$user->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="Modal{{$user->id}}Label" aria-hidden="true">
@@ -127,7 +127,7 @@
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <label for="password" class="col-form-label text-body">Cambiar contraseña</label>
-                                                                    <input class="form-control" autocomplete="off" name="password" type="password" wire:model.defer="">
+                                                                    <input class="form-control" autocomplete="off" name="password" type="password" wire:model="password">
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <label for="role" class="col-form-label text-body">Role</label>

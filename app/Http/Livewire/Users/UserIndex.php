@@ -108,7 +108,8 @@ class UserIndex extends Component
             }
             $user = User::where('id', $this->user->id)->first();
             $role = Role::where('id', $this->user->role)->value('name');
-            $user->assignRole($role);
+            $user->syncRoles($role);
+            //$user->assignRole($role);
 
             $this->emit('alert', 'Se actualizo el Role sin problemas');
             $this->emitTo('roles.role-index', 'render');

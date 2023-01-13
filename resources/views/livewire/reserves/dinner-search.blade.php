@@ -1,11 +1,5 @@
 <div class="container-fluid m-0 p-0">
-
-
-    
-
-    
     <div class="tab-content" id="myTabContent">
-
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             
             <div class="search-container">

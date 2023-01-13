@@ -47,7 +47,7 @@
                                         <i class="fa-solid fa-sort fa-fw float-right mt-1"></i>
                                     @endif
                                 </th>
-                                @can('restaurant.edit')
+                                @can('roles.edit')
                                     <th scope="col" colspan="2"></th>
                                 @endcan
                             </tr>

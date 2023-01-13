@@ -18,6 +18,11 @@ use App\Models\Audit\Xml\XmlForecastReport;
 
 class RevenueManagerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:revenue_manager')->only('index','store');
+    }
+
     private function allData($date, $allData = array())
     {
         $allData["yesterday"] = $this->get_yesterday_data($date);

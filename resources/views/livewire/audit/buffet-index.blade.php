@@ -5,7 +5,7 @@
                 <div class="flex-grow-1 bd-highlight pr-2">
                     <input wire:model="search" class="form-control" placeholder="Ingrese Servicio" aria-label="Ingrese Servicio">
                 </div>
-                @can('restaurant.edit')
+                @can('buffet.edit')
                     @livewire('audit.buffet-create', [], key('create_buffet'))
                 @endcan
             </div>
@@ -52,7 +52,7 @@
                                         <i class="fa-solid fa-sort fa-fw float-right mt-1"></i>
                                     @endif
                                 </th>
-                                @can('restaurant.edit')
+                                @can('buffet.edit')
                                     <th scope="col" colspan="2"></th>
                                 @endcan
                             </tr>
@@ -69,7 +69,7 @@
                                     <td class="text-center align-middle" width="10px">
                                         {{ $buffet->children }}$
                                     </td>
-                                    @can('restaurant.edit')
+                                    @can('buffet.edit')
                                         <td width="10px" class="align-middle">
                                             <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#Modal{{ $buffet->id }}" wire:click='edit({{ $buffet }})'><i class="fa-solid fa-pen-to-square"></i></button>
                                             <div wire:ignore.self class="modal fade" id="Modal{{ $buffet->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="Modal{{ $buffet->id }}Label" aria-hidden="true">

@@ -2,12 +2,7 @@
 
 namespace App\Http\Livewire\Permissions;
 
-use Throwable;
-
 use Livewire\Component;
-use Livewire\WithPagination;
-
-use Illuminate\Support\Facades\Log;
 
 use Spatie\Permission\Models\Permission;
 
@@ -28,7 +23,7 @@ class PermissionCreate extends Component
                 'description' => $this->description,
             ]);
 
-            $this->reset('name');
+            $this->reset('name', 'description');
 
             $this->emitTo('audit.permissions.permission-index', 'render');
 

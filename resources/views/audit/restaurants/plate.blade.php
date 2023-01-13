@@ -99,13 +99,13 @@
                 </li>
                 <li class="nav-item">
                     <div class="btn-group">
-                        <a type="button" class="nav-link " href="{{ route('audit.menus.index', ['lang' => $allData['lang'], 'id' => $allData['restaurant']->id]) }}">{{ $allData['restaurant']->name }}</a>
+                        <a type="button" class="nav-link " href="{{ route('audit.restaurants.menus.index', ['lang' => $allData['lang'], 'id' => $allData['restaurant']->id]) }}">{{ $allData['restaurant']->name }}</a>
                         <button type="button" class="nav-link  dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="visually-hidden">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             @foreach ($allData['restaurants'] as $option)
-                                <li><a class="dropdown-item" href="{{ route('audit.menus.index', ['lang' => $allData['lang'], 'id' => $option->id]) }}">{{ $option->name }}</a></li>
+                                <li><a class="dropdown-item" href="{{ route('audit.restaurants.menus.index', ['lang' => $allData['lang'], 'id' => $option->id]) }}">{{ $option->name }}</a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -128,7 +128,7 @@
                         @foreach ($allData['menus'] as $option)
                             @if ($option->type == 'comida')
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('audit.plates.index', ['lang' => $allData['lang'], 'rest' => $allData['rest'], 'id' => $option->id]) }}">
+                                    <a class="dropdown-item" href="{{ route('audit.restaurants.plates.index', ['lang' => $allData['lang'], 'rest' => $allData['rest'], 'id' => $option->id]) }}">
                                         @switch($allData['lang'])
                                             @case('es')
                                                 {{ $option->name_es }}
@@ -152,7 +152,7 @@
                         @foreach ($allData['menus'] as $option)
                             @if ($option->type == 'bebida')
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('audit.plates.index', ['lang' => $allData['lang'], 'rest' => $allData['rest'], 'id' => $option->id]) }}">
+                                    <a class="dropdown-item" href="{{ route('audit.restaurants.plates.index', ['lang' => $allData['lang'], 'rest' => $allData['rest'], 'id' => $option->id]) }}">
                                         @switch($allData['lang'])
                                             @case('es')
                                                 {{ $option->name_es }}
@@ -174,7 +174,7 @@
                         @foreach ($allData['menus'] as $option)
                             @if ($option->type == 'coctel')
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('audit.plates.index', ['lang' => $allData['lang'], 'rest' => $allData['rest'], 'id' => $option->id]) }}">
+                                    <a class="dropdown-item" href="{{ route('audit.restaurants.plates.index', ['lang' => $allData['lang'], 'rest' => $allData['rest'], 'id' => $option->id]) }}">
                                         @switch($allData['lang'])
                                             @case('es')
                                                 <td class="align-middle">{{ $option->name_es }}</td>

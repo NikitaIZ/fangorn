@@ -177,7 +177,9 @@
                                         @endif
                                     </th>
                                     <th scope="col"></th>
-                                    <!--<th scope="col" colspan="2"></th>-->
+                                    @can('christmas.edit')
+                                        <th scope="col"></th>
+                                    @endcan
                                 </tr>
                             </thead>
                             <tbody class="table-light">
@@ -350,9 +352,9 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <!--<td width="10px" class="align-middle">
+                                            @can('christmas.edit')
                                                 <button class="btn btn-outline-danger" wire:click="$emit('deleteReserve', {{ $booking->order_id }})"><i class="fa-solid fa-trash-can"></i></button>
-                                            </td>-->
+                                            @endcan
                                         </tr>
                                     @endif
                                 @endforeach

@@ -41,6 +41,8 @@ class RoleShow extends Component
                 $permissions[$key]['bool'] = false;
             }
         }
+        sort($permissions);
+
 
         return view('livewire.roles.role-show', compact('permissions', 'role_id', 'role_name'));
     }

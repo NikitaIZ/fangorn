@@ -44,7 +44,7 @@
                     <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown"  href="#" role="button" aria-expanded="false">{{ $restaurant->name }}</a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         @foreach ($restaurant_list as $restaurant_option)
-                            <li><a class="dropdown-item" href="{{ route('audit.menus.index', ['lang' => $lang, 'id' => $restaurant_option->id]) }}">{{ $restaurant_option->name }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('audit.restaurants.menus.index', ['lang' => $lang, 'id' => $restaurant_option->id]) }}">{{ $restaurant_option->name }}</a></li>
                         @endforeach
                     </ul>
                 </li>

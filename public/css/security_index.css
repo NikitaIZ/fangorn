@@ -93,11 +93,11 @@ Caja de busqueda
 
 */
 .search-box{
-    background-color: rgba(170, 170, 170, 0.613);
+    background-color: rgba(216, 212, 212, 0.464);
     padding: 0 !important;
 }
 .search-icon-box{
-    border-right: 1px solid #aaa;
+    border-right: 1px solid rgb(200, 200, 200);
     padding: 0.8rem 1rem !important;
 }
 .search-input{
@@ -111,22 +111,13 @@ Caja de busqueda
 }
 .filter-button{
     padding: 0.8rem 1rem !important;
-    outline: none;
-    font-size: 1rem !important;
+    outline: none !important;
+    
+}
+select{
+    -moz-appearance: none !important;
+    -webkit-appearance: none !important;
+     appearance: none !important;
 }
 
 
-.card-grid{
-    margin-top: 3rem;
-    margin-left: 0.5rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(280px,auto));
-    justify-content: center;
-    gap: 20px;
-    align-items: baseline;
-    border: 2px solid #aaa;
-    box-shadow: 0px 0px 3px #aaa,0px 0px 3px #aaa;
-    border-radius: 0.4rem;
-    padding: 1rem 0;
-    background: #aaaa;
-}

@@ -35,10 +35,44 @@
 
 @section('content')
 
+@can('personal.qr')
+    <div class="modal fade" id="qrcode{{$personal->identification}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Codigo QR</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            <div class="modal-body">
+                <div class="qr-code d-flex justify-content-center align-items-center flex-column gap-3">
+                    <?php 
+                        $json = json_encode(\Crypt::encryptString(json_encode(["personal_id"=>$personal->personal_id])));
+                    ?>
+                    <div id="qr-{{$personal->personal_id}}">
+                        {{\QrCode::format("svg")->size(250)->generate($json);}}
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn btn-primary" href="{{route('security.qrScanner.download',$json)}}">Descargar QR</a>
+                        <button id="btn-{{$personal->personal_id}}" class="btn btn-info btn-print">Imprimir QR</button>
+                    </div>
+                </div>
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endcan
+
 <div class="pt-3 p-1 pb-3">
-    <div class="btn-group">
+    <div class="my-2">
+        @can('personal.create_io_log')
         <a href="{{route('security.personal_io_log.register.get',$personal->personal_id)}}" class="btn btn-primary">Registrar E/S</a>
+        @endcan
+        @can('personal.create_warn')
         <a href="{{route('security.personal_warn.register.get',$personal->personal_id)}}" class="btn btn-danger">Registrar Advertencia</a>
+        @endcan
     </div>
     <div class="container-fluid d-flex flex-column show-container rounded-bottom p-0">
         <div class="rounded-top container-fluid d-flex gap-2 bg-dark p-0 pt-3 pl-2 m-0 flex-column show-container-header">
@@ -61,12 +95,14 @@
             <h5 class="p-0 pb-3 m-0">Detalles de Personal</h5>
         </div>
         <div class="container-fluid d-flex flex-column p-0 pb-3 bg-white rounded-bottom">
-            <div class="container-fluid pt-2 pl-2 ">
-                <h4>Codigo QR</h4>
-                <img class="m-1" width="128" height="128"  src="{{asset('storage/qr-code/qrcode')}}-{{$personal->identification}}.svg" class="" alt="...">
-            </div>
+            
+            @can('personal.qr')
+                <div class="container-fluid pt-2 pl-2 ">
+                    <button data-bs-toggle="modal" data-bs-target="#qrcode{{$personal->identification}}" class="btn btn-primary">Mostrar QR</button>
+                </div>
+            @endcan
             <hr>
-            <div class="container-fluid m-0">
+            <div  class="container-fluid m-0">
                 <h4 class="">{{$personal->position_name}}</h4>
                 <p>{{$personal->position_description}}</p>
             </div>
@@ -96,15 +132,29 @@
 @stop
 
 @section('js')
-    <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    @can('personal.qr')
+        <script>
+            function setPrint(e){
+                const id = e.target.id.split("-")[1]
+                const qr = document.querySelector(`#qr-${id}`)
+                const div_to_print = window.open('', '', 'height=500, width=500');
+                div_to_print.document.write('<html>');
+                div_to_print.document.write('<body');
+                div_to_print.document.write(qr.innerHTML);
+                div_to_print.document.write('</body></html>');
+                div_to_print.document.close();
+                div_to_print.print()
+            }
+            function addEvents(){
 
-    <script type="text/javascript" src="//d3js.org/d3.v4.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-    <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/17.1.6/js/dx.all.js"></script>
-    <script type="text/javascript" src="https://www.chartjs.org/samples/2.9.4/utils.js"></script>
-    <script type="text/javascript" src="../js/guage.babel.js"></script>
-    <script type="text/javascript" src="../js/revenue_manager_charts.babel.js" defer></script>
+                const button = document.querySelector(".btn-print")
+
+                button.addEventListener("click",setPrint)
+            }
+
+            window.onload = addEvents
+        </script>
+    @endcan
+
 
 @stop

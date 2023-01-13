@@ -84,6 +84,18 @@
         @endif
 
     @endif
+
+    @if(\Session::has("response"))
+        @if(\Session::get("response")['status'] == "Successfull")
+            <div class="alert alert-success" role="alert">
+                {{Session::get("response")['message']}}
+            </div>
+        @else
+            <div class="alert alert-danger" role="alert">
+                {{Session::get("response")['message']}}
+            </div>
+        @endif
+    @endif
     
 @stop
 

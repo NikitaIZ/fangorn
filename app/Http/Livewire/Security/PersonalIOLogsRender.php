@@ -49,7 +49,6 @@ class PersonalIOLogsRender extends Component
         ->paginate($this->limit,['*'],'io_logs');
         
         foreach ($logs as $log) {
-            # code...  
             $log->log_datetime = $this->setTMZ($log->log_datetime);  
         }
 

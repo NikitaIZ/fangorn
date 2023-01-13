@@ -20,6 +20,11 @@ use App\Models\Audit\Xml\XmlForecastReport;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:dashboard')->only('index', 'store');
+    }
+
     private function dolarCentral($date)
     {
         $check = Dolar::where('date', $date)->value('id');

@@ -34,8 +34,9 @@ Route::get('send-mail', function () {
 
 
 
-
-
+Route::get("/table",function(){
+    return view('table');
+});
 
 
 

@@ -3,19 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 
-use App\Models\Audit\Dolar;
-use App\Models\Audit\Xml\XmlHeading;
-use App\Models\Audit\Xml\XmlHistoryData;
-use App\Models\Audit\Xml\XmlHistoryReport;
-use App\Models\Audit\Xml\XmlForecastData;
-use App\Models\Audit\Xml\XmlForecastDate;
-use App\Models\Audit\Xml\XmlForecastReport;
 use App\Models\Reserves\EventBooking;
 
 class TestController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:test')->only('index', 'store', 'show');
+    }
+
     public function index(){
         $arrContextOptions=array(
             "ssl"=>array(

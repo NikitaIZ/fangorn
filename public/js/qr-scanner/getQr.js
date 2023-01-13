@@ -10,7 +10,7 @@ const qrScanner = new QrScanner(
         highlightScanRegion: true,
         onDecodeError : onError,
         maxScansPerSecond : 1,
-        highlightCodeOutline : true
+        highlightCodeOutline : true,
     }
 
 )

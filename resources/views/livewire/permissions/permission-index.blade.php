@@ -12,7 +12,7 @@
                 <div class="flex-grow-1 bd-highlight pr-2">
                     <input wire:model="search" class="form-control" placeholder="Ingrese Nombre" aria-label="Ingrese Nombre">
                 </div>
-                @can('permissions.store')
+                @can('permissions.edit')
                     @livewire('permissions.permission-create', [], key('create_permission'))
                 @endcan
             </div>
@@ -59,7 +59,7 @@
                                         <i class="fa-solid fa-sort fa-fw float-right mt-1"></i>
                                     @endif
                                 </th>
-                                @can('restaurant.edit')
+                                @can('permissions.edit')
                                     <th scope="col" colspan="2"></th>
                                 @endcan
                             </tr>
@@ -70,7 +70,7 @@
                                     <td scope="row">{{ $permission->id }}</td>
                                     <td>{{ $permission->name }}</td>
                                     <td>{{ $permission->description }}</td>
-                                    @can('restaurant.edit')
+                                    @can('permissions.edit')
                                         <td width="10px" class="align-middle">
                                             <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#Modal{{ $permission->id }}" wire:click='edit({{ $permission }})'><i class="fa-solid fa-pen-to-square"></i></button>
                                             <div wire:ignore.self class="modal fade" id="Modal{{ $permission->id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="Modal{{ $permission->id }}Label" aria-hidden="true">

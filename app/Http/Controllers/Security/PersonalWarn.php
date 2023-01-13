@@ -7,12 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Security\PersonalWarn as PersonalWarnModel;
-use App\Models\Security\Personal as PersonalModel;
+use App\Models\Security\PersonalModel;
 class PersonalWarn extends Controller
 {
     //
 
 
+    public function __construct()
+    {
+        $this->middleware('can:personal.create_warn')->only('store_view', 'store');
+    }
+    
 
     public function store_view($personal_id){
         

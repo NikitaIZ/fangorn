@@ -8,8 +8,15 @@ use App\Models\Reserves\Event;
 use App\Models\Reserves\EventArea;
 use App\Models\Reserves\EventBooking;
 
-class dinnersController extends Controller
+class DinnersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:dinners')       ->only('index');
+        $this->middleware('can:christmas.show')->only('christmas');
+        $this->middleware('can:new_year.show') ->only('newYear');
+    }
+
     private function orden($event, $year, $status = 'completed'){
 
         $day = date("d-m-Y");
@@ -179,7 +186,7 @@ class dinnersController extends Controller
         return $data;
     }
 
-    function index(){
+    public function index(){
         $data["christmas"]["2022"] = $this->orden(Event::where('date', date("2022-12-24"))->value('id'), 0);
         $data["christmas"]["2021"] = $this->orden(Event::where('date', date("2021-12-24"))->value('id'), 1);
 
@@ -198,11 +205,11 @@ class dinnersController extends Controller
         return view('reserves.index', compact('data', 'point', 'years'));
     }
 
-    function christmas(){
+    public function christmas(){
         return view('reserves.christmas');
     }
 
-    function newYear(){
+    public function newYear(){
         return view('reserves.new-year');
     }
 }

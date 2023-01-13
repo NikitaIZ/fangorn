@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\Audit\Restaurants\RestaurantMenu;
 use App\Models\Audit\Restaurants\RestaurantMenuChoice;
+use App\Models\Audit\Restaurants\RestaurantMenuPlate;
 
 class ChoiceCreate extends Component
 {
@@ -75,6 +76,7 @@ class ChoiceCreate extends Component
     {
         if ($this->choice != null) {
             try {
+                RestaurantMenuPlate::where('choice_id', $this->choice)->delete();
                 $variable = RestaurantMenuChoice::findOrFail($this->choice);
                 $variable->delete();
             } catch(Throwable $e) {

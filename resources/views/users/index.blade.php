@@ -50,7 +50,21 @@
 @stop
 
 @section('content_header')
-    <h1>Usuarios</h1>
+    <div class="row mb-2">
+        <div class="col-12">
+            <ul class="nav nav-tabs justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Usuarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('roles.index') }}">Roles</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('permissions.index') }}">Permisos</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 @stop
 
 @section('content')
